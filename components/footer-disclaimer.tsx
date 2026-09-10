@@ -1,3 +1,4 @@
+import { Link } from "./link";
 import styles from "./footer-disclaimer.module.css";
 
 const links = [
@@ -15,9 +16,9 @@ export function FooterDisclaimer() {
       <span>12700 Kingston Pike, Knoxville, TN 37934</span>
       <nav aria-label="Legal">
         {links.map((link) => (
-          <a href="#" key={link}>
+          <Link href="#" key={link}>
             {link}
-          </a>
+          </Link>
         ))}
       </nav>
       <span>© SouthEast Bank. All rights reserved</span>

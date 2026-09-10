@@ -1,0 +1,73 @@
+.container {
+  align-self: flex-start;
+  position: relative;
+}
+
+.trigger {
+  align-items: center;
+  background: var(--background-white);
+  border: 1px solid var(--stroke-base);
+  border-radius: var(--radius-extra-small);
+  color: var(--text-body);
+  display: inline-flex;
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-medium);
+  gap: var(--space-small);
+  line-height: 1.4;
+  padding: 4px var(--space-small);
+}
+
+.trigger svg {
+  height: 16px;
+  width: 16px;
+}
+
+.menu {
+  background: var(--background-white);
+  border: 1px solid var(--stroke-light);
+  border-radius: var(--radius-extra-small);
+  box-shadow: 0 2px 4px rgb(0 0 0 / 13%);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  left: 0;
+  padding: var(--space-small);
+  position: absolute;
+  top: 37px;
+  width: 246px;
+  z-index: 1;
+}
+
+.menu button {
+  align-items: center;
+  background: transparent;
+  border: 0;
+  border-radius: var(--radius-extra-small);
+  color: var(--text-heading);
+  display: flex;
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-normal);
+  justify-content: space-between;
+  line-height: 1.42;
+  min-height: 48px;
+  padding: var(--space-small) var(--space-medium);
+  text-align: left;
+  width: 100%;
+}
+
+.menu button:hover,
+.current {
+  background: var(--background-light) !important;
+}
+
+.current span {
+  align-items: center;
+  background: var(--background-dark);
+  border-radius: var(--radius-round);
+  color: var(--text-white);
+  display: inline-flex;
+  font-size: var(--font-size-small);
+  height: 20px;
+  justify-content: center;
+  width: 20px;
+}

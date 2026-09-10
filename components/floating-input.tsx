@@ -1,10 +1,13 @@
 "use client";
 
-import { useState, type InputHTMLAttributes, type ReactNode } from "react";
+import { useState, type InputHTMLAttributes, type ReactNode, type Ref } from "react";
 import styles from "./floating-input.module.css";
 
 type FloatingInputProps = InputHTMLAttributes<HTMLInputElement> & {
+  error?: string;
+  inputRef?: Ref<HTMLInputElement>;
   label: string;
+  prefix?: ReactNode;
   trailingElement?: ReactNode;
 };
 
@@ -39,8 +42,11 @@ function EyeOffIcon() {
 
 export function FloatingInput({
   className,
+  error,
+  inputRef,
   id,
   label,
+  prefix,
   trailingElement,
   type,
   ...props
@@ -64,18 +70,29 @@ export function FloatingInput({
   return (
     <div className={styles.field}>
       <input
-        className={[styles.input, className].filter(Boolean).join(" ")}
+        aria-invalid={error ? true : undefined}
+        className={[
+          styles.input,
+          error ? styles.inputError : "",
+          prefix ? styles.withPrefix : "",
+          className,
+        ]
+          .filter(Boolean)
+          .join(" ")}
         id={inputId}
         placeholder=" "
+        ref={inputRef}
         type={isPassword && isPasswordVisible ? "text" : type}
         {...props}
       />
       <label className={styles.label} htmlFor={inputId}>
         {label}
       </label>
+      {prefix ? <span className={styles.prefix}>{prefix}</span> : null}
       {adornment ? (
         <span className={styles.trailingElement}>{adornment}</span>
       ) : null}
+      {error ? <p className={styles.errorMessage}>{error}</p> : null}
     </div>
   );
 }

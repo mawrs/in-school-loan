@@ -88,6 +88,7 @@
 
   --font-family: var(--font-figtree), Arial, sans-serif;
   --font-weight-normal: 400;
+  --font-weight-medium: 500;
   --font-weight-semibold: 600;
   --font-weight-bold: 700;
   --font-size-display-large: 68px;
@@ -117,7 +118,7 @@ html {
 body {
   margin: 0;
   min-height: 100vh;
-  background: var(--color-white);
+  background: var(--background-soft);
 }
 
 button,

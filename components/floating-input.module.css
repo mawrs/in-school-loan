@@ -16,6 +16,16 @@
   width: 100%;
 }
 
+.input[type="number"] {
+  appearance: textfield;
+}
+
+.input[type="number"]::-webkit-inner-spin-button,
+.input[type="number"]::-webkit-outer-spin-button {
+  appearance: none;
+  margin: 0;
+}
+
 .input::placeholder {
   color: transparent;
 }
@@ -27,6 +37,30 @@
 .input:focus {
   border-color: var(--color-blue);
   box-shadow: 0 0 0 1px var(--color-blue);
+}
+
+.input:disabled {
+  background: var(--background-light);
+  color: var(--text-body);
+  cursor: not-allowed;
+}
+
+.input:disabled + .label {
+  color: var(--text-body-subtle);
+}
+
+.inputError,
+.inputError:hover {
+  border-color: var(--color-error);
+}
+
+.inputError:focus {
+  border-color: var(--color-error);
+  box-shadow: 0 0 0 1px var(--color-error);
+}
+
+.withPrefix {
+  padding-left: 32px;
 }
 
 .label {
@@ -45,6 +79,34 @@
 .input:not(:placeholder-shown) + .label {
   color: var(--color-blue);
   transform: translateY(-11px) scale(0.75);
+}
+
+.inputError + .label {
+  color: var(--color-error);
+}
+
+.prefix {
+  color: var(--color-gray-dark);
+  display: none;
+  font-size: var(--font-size-base);
+  left: 16px;
+  line-height: 1.4;
+  pointer-events: none;
+  position: absolute;
+  top: 27px;
+}
+
+.input:focus + .label + .prefix,
+.input:not(:placeholder-shown) + .label + .prefix {
+  display: block;
+}
+
+.input:focus + .label + .prefix {
+  color: var(--color-blue);
+}
+
+.inputError:focus + .label + .prefix {
+  color: var(--color-error);
 }
 
 .trailingElement {
@@ -85,4 +147,11 @@
 
 .input:has(+ .label + .trailingElement) {
   padding-right: 56px;
+}
+
+.errorMessage {
+  color: var(--text-danger);
+  font-size: var(--font-size-small);
+  line-height: 1.42;
+  margin: var(--space-extra-small) 0 0;
 }

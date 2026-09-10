@@ -31,6 +31,72 @@
   white-space: nowrap;
 }
 
+.accountActions,
+.profileButton {
+  align-items: center;
+  display: flex;
+}
+
+.accountActions {
+  gap: var(--space-extra-large);
+}
+
+.profileMenu {
+  position: relative;
+}
+
+.profileButton {
+  background: transparent;
+  border: 0;
+  border-radius: var(--radius-extra-small);
+  color: var(--text-body);
+  font-size: var(--font-size-base);
+  gap: var(--space-small);
+  line-height: 1.42;
+  padding: var(--space-small) var(--space-extra-small);
+}
+
+.profileButton:hover {
+  color: var(--text-brand);
+  text-decoration: underline;
+}
+
+.profileButton svg {
+  height: 16px;
+  width: 16px;
+}
+
+.profileDropdown {
+  background: var(--background-white);
+  border: 1px solid var(--stroke-light);
+  border-radius: var(--radius-extra-small);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-extra-small);
+  padding: var(--space-small);
+  position: absolute;
+  right: 0;
+  top: calc(100% + var(--space-small));
+  width: 160px;
+  z-index: 2;
+}
+
+.profileDropdown button {
+  background: transparent;
+  border: 0;
+  border-radius: var(--radius-extra-small);
+  color: var(--text-body);
+  font-size: var(--font-size-base);
+  line-height: 1.42;
+  padding: var(--space-small);
+  text-align: left;
+}
+
+.profileDropdown button:hover {
+  background: var(--background-soft);
+  color: var(--text-brand);
+}
+
 @media (max-width: 640px) {
   .nav {
     height: 72px;
@@ -39,5 +105,9 @@
 
   .title {
     display: none;
+  }
+
+  .accountActions {
+    gap: var(--space-small);
   }
 }

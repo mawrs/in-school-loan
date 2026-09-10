@@ -19,9 +19,11 @@ export default function Home() {
     const formData = new FormData(event.currentTarget);
     const firstName = String(formData.get("firstName") ?? "").trim() || "John";
     const lastName = String(formData.get("lastName") ?? "").trim();
+    const email = String(formData.get("email") ?? "").trim();
 
     localStorage.setItem("in-school-loans-user-first-name", firstName);
     localStorage.setItem("in-school-loans-user-last-name", lastName);
+    localStorage.setItem("in-school-loans-user-email", email);
     router.push("/dashboard");
   }
 

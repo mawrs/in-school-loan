@@ -1,8 +1,10 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/button";
 import { FooterDisclaimer } from "@/components/footer-disclaimer";
+import { Link } from "@/components/link";
 import { TopNav } from "@/components/top-nav";
 import styles from "./page.module.css";
 
@@ -48,7 +50,11 @@ function BankIcon() {
 }
 
 export default function Dashboard() {
+  const [isRequirementsOpen, setIsRequirementsOpen] = useState(false);
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isSupportOpen, setIsSupportOpen] = useState(false);
+  const [selectedLoan, setSelectedLoan] = useState<string | null>(null);
+  const router = useRouter();
   const [user] = useState(() => {
     if (typeof window === "undefined") {
       return { firstName: "John", lastName: "" };
@@ -64,19 +70,18 @@ export default function Dashboard() {
   });
   const fullName = [user.firstName, user.lastName].filter(Boolean).join(" ");
 
+  function signOut() {
+    localStorage.removeItem("in-school-loans-user-first-name");
+    localStorage.removeItem("in-school-loans-user-last-name");
+    localStorage.removeItem("in-school-loans-user-name");
+    router.push("/");
+  }
+
   return (
     <div className={styles.page}>
       <TopNav
-        action={
-          <div className={styles.navActions}>
-            <Button onClick={() => setIsSupportOpen(true)} size="small" variant="outline">
-              Contact support
-            </Button>
-            <button className={styles.profileButton} type="button">
-              {fullName} <ChevronDownIcon />
-            </button>
-          </div>
-        }
+        onSupport={() => setIsSupportOpen(true)}
+        userName={fullName}
       />
       {isSupportOpen ? (
         <div className={styles.dialogBackdrop} role="presentation">
@@ -100,6 +105,30 @@ export default function Dashboard() {
           </section>
         </div>
       ) : null}
+      {isRequirementsOpen ? (
+        <div className={styles.dialogBackdrop} role="presentation">
+          <section
+            aria-labelledby="requirements-title"
+            aria-modal="true"
+            className={`${styles.dialog} ${styles.requirementsDialog}`}
+            role="dialog"
+          >
+            <h4 id="requirements-title">In-School Loan Requirements</h4>
+            <ul className={styles.requirementsList}>
+              <li>Minimum loan amount: $1,000</li>
+              <li>Must be a U.S. citizen or permanent resident</li>
+              <li>Must meet the legal age of majority in your state</li>
+              <li>Annual income of you or your co-signer: $35,000 or more</li>
+              <li>Debt-to-income ratio that demonstrates you can repay the loan</li>
+            </ul>
+            <div className={styles.requirementsAction}>
+              <Button onClick={() => setIsRequirementsOpen(false)} size="base">
+                Close
+              </Button>
+            </div>
+          </section>
+        </div>
+      ) : null}
       <main className={styles.main}>
         <section className={styles.content} aria-labelledby="dashboard-title">
           <header className={styles.header}>
@@ -108,26 +137,47 @@ export default function Dashboard() {
           </header>
           <p className={styles.notice}>You have no applications in progress.</p>
           <section className={styles.loanSection} aria-labelledby="loan-type-title">
-            <h2 id="loan-type-title">Select a loan type to get started</h2>
+            <h4 id="loan-type-title">Select a loan type to get started</h4>
             <div className={styles.loanGrid}>
               {loanTypes.map((loan) => (
                 <article className={styles.loanOption} key={loan.name}>
-                  <button className={styles.loanCard} type="button">
+                  <button
+                    className={
+                      selectedLoan === loan.name
+                        ? `${styles.loanCard} ${styles.selectedLoanCard}`
+                        : styles.loanCard
+                    }
+                    aria-pressed={selectedLoan === loan.name}
+                    onClick={() => {
+                      if (loan.name === "In-School Loan") {
+                        setSelectedLoan(loan.name);
+                      }
+                    }}
+                    type="button"
+                  >
                     <BankIcon />
                     <span>
                       <strong>{loan.name}</strong>
                       <small>{loan.description}</small>
                     </span>
                   </button>
-                  <button className={styles.requirements} type="button">
-                    {loan.requirements} <span aria-hidden="true">›</span>
-                  </button>
+                  <Link
+                    href="#"
+                    onClick={loan.name === "In-School Loan" ? () => setIsRequirementsOpen(true) : undefined}
+                  >
+                    {loan.requirements}
+                  </Link>
                 </article>
               ))}
             </div>
           </section>
           <div className={styles.rateAction}>
-            <Button disabled fullWidth size="base">
+            <Button
+              disabled={!selectedLoan}
+              fullWidth
+              onClick={() => router.push("/loan-info")}
+              size="base"
+            >
               Get a rate in 2 minutes
             </Button>
             <p>Checking your rate will NOT affect your credit score.</p>

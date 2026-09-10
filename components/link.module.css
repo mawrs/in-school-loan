@@ -1,0 +1,33 @@
+.link {
+  align-items: center;
+  background: transparent;
+  border: 0;
+  border-radius: var(--radius-extra-small);
+  color: var(--text-body);
+  display: inline-flex;
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-normal);
+  gap: var(--space-extra-small);
+  line-height: 1.42;
+  padding: 4px;
+  text-decoration: none;
+}
+
+.link:hover {
+  color: var(--text-brand);
+  text-decoration: underline;
+}
+
+.link:focus-visible {
+  outline: 3px solid var(--color-navyblue-background);
+  outline-offset: 2px;
+}
+
+.backLink {
+  gap: var(--space-small);
+}
+
+.backLink svg {
+  height: 16px;
+  width: 16px;
+}

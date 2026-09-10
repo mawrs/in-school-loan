@@ -1,0 +1,144 @@
+"use client";
+
+import { useState, type ChangeEvent, type FormEvent } from "react";
+import { useRouter } from "next/navigation";
+import { Button } from "@/components/button";
+import { FloatingInput } from "@/components/floating-input";
+import { BackLink } from "@/components/link";
+import { Stepper } from "@/components/stepper";
+import { TopNav } from "@/components/top-nav";
+import styles from "./page.module.css";
+
+function ChevronDownIcon() {
+  return (
+    <svg aria-hidden="true" fill="none" viewBox="0 0 24 24">
+      <path
+        d="m6 9 6 6 6-6"
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="1.7"
+      />
+    </svg>
+  );
+}
+
+function formatCurrencyInput(value: string) {
+  const cleaned = value.replaceAll(/[^\d.]/g, "");
+  const [wholeNumber = "", ...decimalParts] = cleaned.split(".");
+  const formattedWholeNumber = wholeNumber.replaceAll(/\B(?=(\d{3})+(?!\d))/g, ",");
+  const decimal = decimalParts.join("").slice(0, 2);
+
+  return cleaned.includes(".") ? `${formattedWholeNumber}.${decimal}` : formattedWholeNumber;
+}
+
+function currencyValue(value: string) {
+  return Number(value.replaceAll(",", ""));
+}
+
+export default function LoanInfo() {
+  const router = useRouter();
+  const currentStep = 1;
+  const totalSteps = 4;
+  const [costOfAttendance, setCostOfAttendance] = useState("");
+  const [estimatedFinancialAid, setEstimatedFinancialAid] = useState("");
+  const [firstName] = useState(
+    () =>
+      typeof window === "undefined"
+        ? "John"
+        : localStorage.getItem("in-school-loans-user-first-name") || "John",
+  );
+  const [lastName] = useState(
+    () =>
+      typeof window === "undefined"
+        ? ""
+        : localStorage.getItem("in-school-loans-user-last-name") || "",
+  );
+  const fullName = [firstName, lastName].filter(Boolean).join(" ");
+  const costAmount = currencyValue(costOfAttendance);
+  const financialAidAmount = currencyValue(estimatedFinancialAid);
+  const financialAidError =
+    costAmount > 0 && financialAidAmount > costAmount
+      ? "Financial aid cannot be greater than cost of attendance."
+      : undefined;
+
+  const handleCurrencyChange = (
+    event: ChangeEvent<HTMLInputElement>,
+    setValue: (value: string) => void,
+  ) => {
+    setValue(formatCurrencyInput(event.target.value));
+  };
+
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (financialAidError) {
+      return;
+    }
+
+    localStorage.setItem("in-school-loans-cost-of-attendance", costOfAttendance);
+    localStorage.setItem("in-school-loans-financial-aid", estimatedFinancialAid);
+    router.push("/loan-eligibility");
+  };
+
+  return (
+    <div className={styles.page}>
+      <TopNav
+        title="In-School Loan"
+        userName={fullName}
+      />
+      <div
+        aria-label={`Step ${currentStep} of ${totalSteps}`}
+        aria-valuemax={totalSteps}
+        aria-valuemin={0}
+        aria-valuenow={currentStep}
+        className={styles.progressBar}
+        role="progressbar"
+      >
+        {Array.from({ length: totalSteps }, (_, index) => (
+          <span className={index < currentStep ? styles.progressComplete : undefined} key={index} />
+        ))}
+      </div>
+      <main className={styles.main}>
+        <form className={styles.form} onSubmit={handleSubmit}>
+          <div className={styles.header}>
+            <Stepper currentStep={currentStep} />
+            <div className={styles.title}>
+              <h1>Nice to meet you, {firstName}. What&apos;s your cost of attendance?</h1>
+              <p>
+                If you are not sure about your cost of attendance or financial aid, please check
+                with your financial aid office.
+              </p>
+            </div>
+          </div>
+          <div className={styles.fields}>
+            <FloatingInput
+              inputMode="numeric"
+              label="Cost of attendance"
+              name="costOfAttendance"
+              onChange={(event) => handleCurrencyChange(event, setCostOfAttendance)}
+              prefix="$"
+              type="text"
+              value={costOfAttendance}
+            />
+            <FloatingInput
+              inputMode="numeric"
+              label="Estimated financial aid"
+              name="estimatedFinancialAid"
+              onChange={(event) => handleCurrencyChange(event, setEstimatedFinancialAid)}
+              error={financialAidError}
+              prefix="$"
+              type="text"
+              value={estimatedFinancialAid}
+            />
+          </div>
+          <div className={styles.actions}>
+            <BackLink href="/dashboard" />
+            <Button size="base" type="submit">
+              Next
+            </Button>
+          </div>
+        </form>
+      </main>
+    </div>
+  );
+}
