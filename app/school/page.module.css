@@ -3,28 +3,6 @@
   min-height: 100svh;
 }
 
-.navActions,
-.profileName,
-.actions {
-  align-items: center;
-  display: flex;
-}
-
-.navActions {
-  gap: var(--space-extra-large);
-}
-
-.profileName {
-  color: var(--text-body);
-  font-size: var(--font-size-base);
-  gap: var(--space-small);
-}
-
-.profileName svg {
-  height: 16px;
-  width: 16px;
-}
-
 .progressBar {
   display: grid;
   gap: var(--space-small);
@@ -48,7 +26,8 @@
 
 .form,
 .header,
-.fields {
+.fields,
+.enrollmentField {
   display: flex;
   flex-direction: column;
 }
@@ -73,31 +52,35 @@
   gap: var(--space-small);
 }
 
-.nameFields {
+.twoColumns {
   display: grid;
   gap: var(--space-small);
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: 1fr 1fr;
+}
+
+.enrollmentField {
+  gap: var(--space-small);
+}
+
+.enrollmentField > span {
+  color: var(--text-heading);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-medium);
+  line-height: 1.42;
 }
 
 .actions {
+  display: flex;
   justify-content: space-between;
   margin-top: var(--space-xl);
 }
 
 @media (max-width: 640px) {
-  .navActions {
-    gap: var(--space-small);
-  }
-
-  .profileName {
-    display: none;
-  }
-
   .header h1 {
     font-size: var(--font-size-h1);
   }
 
-  .nameFields {
+  .twoColumns {
     grid-template-columns: 1fr;
   }
 }

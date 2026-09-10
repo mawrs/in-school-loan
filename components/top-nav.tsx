@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "./button";
 import styles from "./top-nav.module.css";
@@ -54,6 +54,18 @@ function ChevronDownIcon() {
 function AccountActions({ onSupport, userName }: Pick<TopNavProps, "onSupport" | "userName">) {
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
+  const profileMenuRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const closeMenu = (event: MouseEvent) => {
+      if (!profileMenuRef.current?.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", closeMenu);
+    return () => document.removeEventListener("mousedown", closeMenu);
+  }, []);
 
   function signOut() {
     localStorage.removeItem("in-school-loans-user-first-name");
@@ -65,7 +77,7 @@ function AccountActions({ onSupport, userName }: Pick<TopNavProps, "onSupport" |
   return (
     <div className={styles.accountActions}>
       <Button onClick={onSupport} size="small" variant="outline">Contact support</Button>
-      <div className={styles.profileMenu}>
+      <div className={styles.profileMenu} ref={profileMenuRef}>
         <button aria-expanded={isOpen} aria-haspopup="menu" className={styles.profileButton} onClick={() => setIsOpen((open) => !open)} type="button">
           {userName} <ChevronDownIcon />
         </button>

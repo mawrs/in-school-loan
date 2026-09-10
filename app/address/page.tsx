@@ -1,12 +1,26 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/button";
+import { Combobox } from "@/components/combobox";
+import { CurrencyInput } from "@/components/currency-input";
+import { Dropdown } from "@/components/dropdown";
 import { FloatingInput } from "@/components/floating-input";
 import { BackLink } from "@/components/link";
 import { Stepper } from "@/components/stepper";
 import { TopNav } from "@/components/top-nav";
 import styles from "./page.module.css";
+
+const states = [
+  "Alabama", "Alaska", "Arizona", "Arkansas", "California", "Colorado", "Connecticut",
+  "Delaware", "Florida", "Georgia", "Hawaii", "Idaho", "Illinois", "Indiana", "Iowa",
+  "Kansas", "Kentucky", "Louisiana", "Maine", "Maryland", "Massachusetts", "Michigan",
+  "Minnesota", "Mississippi", "Missouri", "Montana", "Nebraska", "Nevada", "New Hampshire",
+  "New Jersey", "New Mexico", "New York", "North Carolina", "North Dakota", "Ohio", "Oklahoma",
+  "Oregon", "Pennsylvania", "Rhode Island", "South Carolina", "South Dakota", "Tennessee",
+  "Texas", "Utah", "Vermont", "Virginia", "Washington", "West Virginia", "Wisconsin", "Wyoming",
+];
 
 type AddressComponent = { long_name: string; short_name: string; types: string[] };
 type Place = { address_components?: AddressComponent[] };
@@ -22,8 +36,10 @@ declare global {
 }
 
 export default function Address() {
+  const router = useRouter();
   const addressRef = useRef<HTMLInputElement>(null);
   const [address, setAddress] = useState({ city: "", state: "", street: "", zip: "" });
+  const [housingExpense, setHousingExpense] = useState("");
   const [firstName] = useState(
     () => (typeof window === "undefined" ? "John" : localStorage.getItem("in-school-loans-user-first-name") || "John"),
   );
@@ -52,7 +68,7 @@ export default function Address() {
           if (component.types.includes("street_number")) streetNumber = component.long_name;
           if (component.types.includes("route")) values.street = `${streetNumber} ${component.short_name}`.trim();
           if (component.types.includes("locality")) values.city = component.long_name;
-          if (component.types.includes("administrative_area_level_1")) values.state = component.short_name;
+          if (component.types.includes("administrative_area_level_1")) values.state = component.long_name;
           if (component.types.includes("postal_code")) values.zip = component.long_name;
         }
 
@@ -81,7 +97,13 @@ export default function Address() {
         {Array.from({ length: 4 }, (_, index) => <span className={index < 2 ? styles.progressComplete : undefined} key={index} />)}
       </div>
       <main className={styles.main}>
-        <form className={styles.form} onSubmit={(event) => event.preventDefault()}>
+        <form
+          className={styles.form}
+          onSubmit={(event) => {
+            event.preventDefault();
+            router.push("/school");
+          }}
+        >
           <div className={styles.header}>
             <Stepper currentStep={2} />
             <div>
@@ -90,32 +112,46 @@ export default function Address() {
             </div>
           </div>
           <div className={styles.fields}>
-            <div className={styles.streetRow}>
-              <FloatingInput
-                inputRef={addressRef}
-                label="Street Address"
-                name="streetAddress"
-                onChange={(event) => setAddress((current) => ({ ...current, street: event.target.value }))}
-                value={address.street}
+            <div className={styles.addressFields}>
+              <div className={styles.streetRow}>
+                <FloatingInput
+                  inputRef={addressRef}
+                  label="Street Address"
+                  name="streetAddress"
+                  onChange={(event) => setAddress((current) => ({ ...current, street: event.target.value }))}
+                  value={address.street}
+                />
+                <FloatingInput label="Apt #" name="apartment" />
+              </div>
+              <div className={styles.addressRow}>
+                <FloatingInput label="Zip Code" name="zip" onChange={(event) => setAddress((current) => ({ ...current, zip: event.target.value }))} value={address.zip} />
+                <Combobox
+                  label="State"
+                  name="state"
+                  onValueChange={(state) => setAddress((current) => ({ ...current, state }))}
+                  options={states}
+                  value={address.state}
+                />
+                <FloatingInput label="City" name="city" onChange={(event) => setAddress((current) => ({ ...current, city: event.target.value }))} value={address.city} />
+              </div>
+            </div>
+            <div className={styles.livingFields}>
+              <div className={styles.selectField}>
+                <span>What is your current living arrangement?</span>
+                <Dropdown
+                  label="Living Arrangement"
+                  name="livingArrangement"
+                  options={["Own with Mortgage", "Own without Mortgage", "Rent", "Live with Family"]}
+                  placeholder="Please Select"
+                />
+              </div>
+              <CurrencyInput
+                label="Monthly Housing Expense"
+                name="housingExpense"
+                onValueChange={setHousingExpense}
+                value={housingExpense}
               />
-              <FloatingInput label="Apt #" name="apartment" />
             </div>
-            <div className={styles.addressRow}>
-              <FloatingInput label="Zip Code" name="zip" onChange={(event) => setAddress((current) => ({ ...current, zip: event.target.value }))} value={address.zip} />
-              <FloatingInput label="State" name="state" onChange={(event) => setAddress((current) => ({ ...current, state: event.target.value }))} value={address.state} />
-              <FloatingInput label="City" name="city" onChange={(event) => setAddress((current) => ({ ...current, city: event.target.value }))} value={address.city} />
-            </div>
-            <label className={styles.selectField}>
-              <span>What is your current living arrangement?</span>
-              <select defaultValue="" name="livingArrangement">
-                <option disabled value="">Please Select</option>
-                <option>Rent</option>
-                <option>Own</option>
-                <option>Live with family</option>
-                <option>Other</option>
-              </select>
-            </label>
-            <FloatingInput label="Housing Expense (Monthly)" name="housingExpense" />
           </div>
           <div className={styles.actions}>
             <BackLink href="/verification" />

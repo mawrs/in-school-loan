@@ -3,28 +3,6 @@
   min-height: 100svh;
 }
 
-.navActions,
-.profileName,
-.actions {
-  align-items: center;
-  display: flex;
-}
-
-.navActions {
-  gap: var(--space-extra-large);
-}
-
-.profileName {
-  color: var(--text-body);
-  font-size: var(--font-size-base);
-  gap: var(--space-small);
-}
-
-.profileName svg {
-  height: 16px;
-  width: 16px;
-}
-
 .progressBar {
   display: grid;
   gap: var(--space-small);
@@ -48,7 +26,7 @@
 
 .form,
 .header,
-.fields {
+.header > div {
   display: flex;
   flex-direction: column;
 }
@@ -61,6 +39,10 @@
   gap: var(--space-extra-small);
 }
 
+.header > div {
+  gap: var(--space-small);
+}
+
 .header h1 {
   color: var(--text-heading);
   font-size: var(--font-size-display-medium);
@@ -69,35 +51,55 @@
   margin: 0;
 }
 
-.fields {
-  gap: var(--space-small);
+.header p {
+  color: var(--text-body);
+  font-size: var(--font-size-base);
+  line-height: 1.42;
+  margin: 0;
 }
 
-.nameFields {
+.options {
+  border: 0;
   display: grid;
   gap: var(--space-small);
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: 1fr 1fr;
+  margin: 0;
+  padding: 0;
+}
+
+.options label {
+  align-items: center;
+  background: var(--background-white);
+  border: 1px solid var(--stroke-medium);
+  border-radius: var(--radius-extra-small);
+  color: var(--text-heading);
+  display: flex;
+  font-size: var(--font-size-base);
+  gap: var(--space-small);
+  height: 48px;
+  padding: 0 var(--space-small);
+}
+
+.options label.selected {
+  background: var(--background-success-soft);
+  border-color: var(--stroke-success);
+}
+
+.options input {
+  accent-color: var(--color-success);
+  height: 16px;
+  margin: 0;
+  width: 16px;
 }
 
 .actions {
+  display: flex;
   justify-content: space-between;
   margin-top: var(--space-xl);
 }
 
 @media (max-width: 640px) {
-  .navActions {
-    gap: var(--space-small);
-  }
-
-  .profileName {
-    display: none;
-  }
-
   .header h1 {
     font-size: var(--font-size-h1);
-  }
-
-  .nameFields {
-    grid-template-columns: 1fr;
   }
 }

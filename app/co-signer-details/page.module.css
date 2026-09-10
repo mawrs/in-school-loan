@@ -1,0 +1,13 @@
+.page { background: var(--background-soft); min-height: 100svh; }
+.progressBar { display: grid; gap: var(--space-small); grid-template-columns: repeat(4, 1fr); height: 6px; }
+.progressBar span { background: var(--background-light); }
+.progressComplete { background: var(--color-success) !important; }
+.main { margin: 0 auto; max-width: 688px; padding: var(--space-xxl) 0 var(--space-xl); }
+.form, .header, .fields { display: flex; flex-direction: column; }
+.form { gap: var(--space-xl); }
+.header { gap: var(--space-extra-small); }
+.header h1 { color: var(--text-heading); font-size: var(--font-size-display-medium); font-weight: var(--font-weight-medium); line-height: 1.23; margin: 0; }
+.fields { gap: var(--space-small); }
+.nameFields { display: grid; gap: var(--space-small); grid-template-columns: repeat(3, 1fr); }
+.actions { display: flex; justify-content: space-between; margin-top: var(--space-xl); }
+@media (max-width: 640px) { .main { padding-inline: var(--space-medium); } .header h1 { font-size: var(--font-size-h1); } .nameFields { grid-template-columns: 1fr; } }

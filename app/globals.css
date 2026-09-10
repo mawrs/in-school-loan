@@ -78,6 +78,8 @@
   --radius-xxl: 24px;
   --radius-round: 9999px;
 
+  --shadow-small: 0 1px 4px rgb(0 0 0 / 12%);
+
   --space-extra-small: 4px;
   --space-small: 8px;
   --space-medium: 16px;

@@ -1,0 +1,24 @@
+.page { background: var(--background-soft); min-height: 100svh; }
+.progressBar { display: grid; gap: var(--space-small); grid-template-columns: repeat(4, 1fr); height: 6px; }
+.progressBar span { background: var(--background-light); }
+.progressComplete { background: var(--color-success) !important; }
+.main { margin: 0 auto; max-width: 688px; padding: var(--space-xxl) 0 var(--space-xl); }
+.form, .header, .header > div, .employment { display: flex; flex-direction: column; }
+.form { gap: var(--space-xl); }
+.header { gap: var(--space-extra-small); }
+.header > div { gap: var(--space-small); }
+.header h1 { color: var(--text-heading); font-size: var(--font-size-display-medium); font-weight: var(--font-weight-medium); line-height: 1.23; margin: 0; }
+.header p, .helper { color: var(--text-body); font-size: var(--font-size-base); line-height: 1.42; margin: 0; }
+.incomePicker { display: flex; flex-direction: column; gap: var(--space-extra-small); position: relative; }
+.incomePicker output { background: var(--background-white); border: 1px solid var(--stroke-medium); border-radius: var(--radius-extra-small); color: var(--text-heading); font-size: var(--font-size-h1); font-weight: var(--font-weight-medium); line-height: 1.25; padding: var(--space-medium) var(--space-xxl); position: absolute; top: 0; transform: translateX(-50%); width: fit-content; }
+.incomePicker output::after { border-left: 12px solid transparent; border-right: 12px solid transparent; border-top: 12px solid var(--background-brand); bottom: -12px; content: ""; left: calc(50% - 12px); position: absolute; }
+.incomePicker input { appearance: none; background: transparent; cursor: pointer; height: 24px; margin: 87px 0 0; width: 100%; }
+.incomePicker input::-webkit-slider-runnable-track { background: var(--background-brand); border-radius: var(--radius-round); height: 7px; }
+.incomePicker input::-webkit-slider-thumb { appearance: none; background: var(--background-white); border: 4px solid var(--background-brand); border-radius: var(--radius-round); height: 24px; margin-top: -8.5px; width: 24px; }
+.incomePicker input::-moz-range-track { background: var(--background-brand); border-radius: var(--radius-round); height: 7px; }
+.incomePicker input::-moz-range-thumb { background: var(--background-white); border: 4px solid var(--background-brand); border-radius: var(--radius-round); height: 24px; width: 24px; }
+.incomePicker div { display: flex; justify-content: space-between; color: var(--text-heading); font-size: var(--font-size-base); line-height: 1.42; }
+.employment { gap: var(--space-small); }
+.employment > span { color: var(--text-heading); font-size: var(--font-size-base); font-weight: var(--font-weight-medium); line-height: 1.42; }
+.actions { display: flex; justify-content: space-between; margin-top: var(--space-xl); }
+@media (max-width: 640px) { .main { padding-inline: var(--space-medium); } .header h1 { font-size: var(--font-size-h1); } }

@@ -1,9 +1,9 @@
 "use client";
 
-import { useState, type ChangeEvent, type FormEvent } from "react";
+import { useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/button";
-import { FloatingInput } from "@/components/floating-input";
+import { CurrencyInput } from "@/components/currency-input";
 import { BackLink } from "@/components/link";
 import { Stepper } from "@/components/stepper";
 import { TopNav } from "@/components/top-nav";
@@ -21,15 +21,6 @@ function ChevronDownIcon() {
       />
     </svg>
   );
-}
-
-function formatCurrencyInput(value: string) {
-  const cleaned = value.replaceAll(/[^\d.]/g, "");
-  const [wholeNumber = "", ...decimalParts] = cleaned.split(".");
-  const formattedWholeNumber = wholeNumber.replaceAll(/\B(?=(\d{3})+(?!\d))/g, ",");
-  const decimal = decimalParts.join("").slice(0, 2);
-
-  return cleaned.includes(".") ? `${formattedWholeNumber}.${decimal}` : formattedWholeNumber;
 }
 
 function currencyValue(value: string) {
@@ -61,13 +52,6 @@ export default function LoanInfo() {
     costAmount > 0 && financialAidAmount > costAmount
       ? "Financial aid cannot be greater than cost of attendance."
       : undefined;
-
-  const handleCurrencyChange = (
-    event: ChangeEvent<HTMLInputElement>,
-    setValue: (value: string) => void,
-  ) => {
-    setValue(formatCurrencyInput(event.target.value));
-  };
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -111,23 +95,17 @@ export default function LoanInfo() {
             </div>
           </div>
           <div className={styles.fields}>
-            <FloatingInput
-              inputMode="numeric"
+            <CurrencyInput
               label="Cost of attendance"
               name="costOfAttendance"
-              onChange={(event) => handleCurrencyChange(event, setCostOfAttendance)}
-              prefix="$"
-              type="text"
+              onValueChange={setCostOfAttendance}
               value={costOfAttendance}
             />
-            <FloatingInput
-              inputMode="numeric"
+            <CurrencyInput
               label="Estimated financial aid"
               name="estimatedFinancialAid"
-              onChange={(event) => handleCurrencyChange(event, setEstimatedFinancialAid)}
               error={financialAidError}
-              prefix="$"
-              type="text"
+              onValueChange={setEstimatedFinancialAid}
               value={estimatedFinancialAid}
             />
           </div>

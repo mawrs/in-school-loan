@@ -1,13 +1,14 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 import styles from "./stepper.module.css";
 
 const steps = [
-  "1 of 4 — Loan Info",
-  "2 of 4 — About You",
-  "3 of 4 — Financial Info",
-  "4 of 4 — About You",
+  { label: "1 of 4 — Loan Info", href: "/loan-info" },
+  { label: "2 of 4 — About You", href: "/verification" },
+  { label: "3 of 4 — Financial Info", href: "/co-signer" },
+  { label: "4 of 4 — Review", href: "/review" },
 ];
 
 function ChevronDownIcon() {
@@ -26,9 +27,11 @@ function ChevronDownIcon() {
 
 type StepperProps = {
   currentStep: number;
+  currentLabel?: string;
 };
 
-export function Stepper({ currentStep }: StepperProps) {
+export function Stepper({ currentLabel, currentStep }: StepperProps) {
+  const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
   const stepperRef = useRef<HTMLDivElement>(null);
 
@@ -52,7 +55,7 @@ export function Stepper({ currentStep }: StepperProps) {
         onClick={() => setIsOpen((open) => !open)}
         type="button"
       >
-        {steps[currentStep - 1]} <ChevronDownIcon />
+        {currentLabel ?? steps[currentStep - 1].label} <ChevronDownIcon />
       </button>
       {isOpen ? (
         <div className={styles.menu} role="menu">
@@ -60,12 +63,17 @@ export function Stepper({ currentStep }: StepperProps) {
             <button
               aria-current={index + 1 === currentStep ? "step" : undefined}
               className={index + 1 === currentStep ? styles.current : undefined}
-              key={step}
-              onClick={() => setIsOpen(false)}
+              key={step.label}
+              onClick={() => {
+                if (step.href) {
+                  router.push(step.href);
+                }
+                setIsOpen(false);
+              }}
               role="menuitem"
               type="button"
             >
-              {step}
+              {step.label}
               {index + 1 === currentStep ? <span aria-hidden="true">✓</span> : null}
             </button>
           ))}

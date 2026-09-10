@@ -21,7 +21,7 @@
 .main {
   margin: 0 auto;
   max-width: 688px;
-  padding: var(--space-xxl) var(--space-medium) var(--space-xl);
+  padding: var(--space-xxl) 0 var(--space-xl);
 }
 
 .form,
@@ -60,6 +60,13 @@
 }
 
 .fields {
+  gap: var(--space-medium);
+}
+
+.addressFields,
+.livingFields {
+  display: flex;
+  flex-direction: column;
   gap: var(--space-small);
 }
 
@@ -83,36 +90,17 @@
   min-width: 0;
 }
 
-.addressRow {
-  margin-bottom: var(--space-small);
-}
-
 .selectField {
   display: flex;
   flex-direction: column;
   gap: var(--space-small);
 }
 
-.selectField span {
+.selectField > span {
   color: var(--text-heading);
   font-size: var(--font-size-base);
   font-weight: var(--font-weight-medium);
   line-height: 1.42;
-}
-
-.selectField select {
-  appearance: none;
-  background: var(--background-white);
-  background-image: linear-gradient(45deg, transparent 50%, var(--text-body) 50%), linear-gradient(135deg, var(--text-body) 50%, transparent 50%);
-  background-position: calc(100% - 18px) 25px, calc(100% - 14px) 25px;
-  background-repeat: no-repeat;
-  background-size: 4px 4px, 4px 4px;
-  border: 1px solid var(--stroke-medium);
-  border-radius: var(--radius-extra-small);
-  color: var(--text-body);
-  font-size: var(--font-size-base);
-  height: 40px;
-  padding: 0 var(--space-medium);
 }
 
 .actions {

@@ -1,5 +1,4 @@
-.container {
-  align-self: flex-start;
+.dropdown {
   position: relative;
 }
 
@@ -9,12 +8,16 @@
   border: 1px solid var(--stroke-medium);
   border-radius: var(--radius-extra-small);
   color: var(--text-body);
-  display: inline-flex;
+  display: flex;
   font-size: var(--font-size-base);
-  font-weight: var(--font-weight-medium);
-  gap: var(--space-small);
-  line-height: 1.4;
-  padding: 4px var(--space-small);
+  font-weight: var(--font-weight-normal);
+  height: 60px;
+  justify-content: space-between;
+  line-height: 1.42;
+  padding: 24px var(--space-medium) var(--space-small);
+  position: relative;
+  text-align: left;
+  width: 100%;
 }
 
 .trigger:hover {
@@ -23,7 +26,41 @@
 
 .trigger svg {
   height: 16px;
+  margin-left: auto;
+  position: absolute;
+  right: var(--space-medium);
+  top: 22px;
   width: 16px;
+}
+
+.label {
+  color: var(--text-body);
+  font-size: var(--font-size-base);
+  left: 17px;
+  line-height: 1.4;
+  pointer-events: none;
+  position: absolute;
+  top: 18px;
+  transform-origin: left top;
+  transition: color 150ms ease, transform 150ms ease;
+}
+
+.floatingLabel {
+  color: var(--text-brand);
+  transform: translateY(-11px) scale(0.75);
+}
+
+.value {
+  color: var(--text-heading);
+}
+
+.trigger:focus + .label {
+  color: var(--text-brand);
+}
+
+.trigger:focus-visible {
+  outline: 3px solid var(--color-navyblue-background);
+  outline-offset: 2px;
 }
 
 .menu {
@@ -37,9 +74,9 @@
   left: 0;
   padding: var(--space-small);
   position: absolute;
-  top: 37px;
-  width: 246px;
-  z-index: 1;
+  top: calc(100% + var(--space-extra-small));
+  width: 100%;
+  z-index: 2;
 }
 
 .menu button {
@@ -60,11 +97,11 @@
 }
 
 .menu button:hover,
-.current {
+.selected {
   background: var(--background-light) !important;
 }
 
-.current span {
+.selected span {
   align-items: center;
   background: var(--background-dark);
   border-radius: var(--radius-round);

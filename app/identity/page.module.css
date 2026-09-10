@@ -1,0 +1,149 @@
+.page {
+  background: var(--background-soft);
+  min-height: 100svh;
+}
+
+.progressBar {
+  display: grid;
+  gap: var(--space-small);
+  grid-template-columns: repeat(4, 1fr);
+  height: 6px;
+}
+
+.progressBar span {
+  background: var(--background-light);
+}
+
+.progressComplete {
+  background: var(--color-success) !important;
+}
+
+.main {
+  margin: 0 auto;
+  max-width: 688px;
+  padding: var(--space-xxl) 0 var(--space-xl);
+}
+
+.form,
+.header,
+.header > div,
+.fields {
+  display: flex;
+  flex-direction: column;
+}
+
+.form {
+  gap: var(--space-xl);
+}
+
+.header {
+  gap: var(--space-extra-small);
+}
+
+.header > div {
+  gap: var(--space-small);
+}
+
+.header h1 {
+  color: var(--text-heading);
+  font-size: var(--font-size-display-medium);
+  font-weight: var(--font-weight-medium);
+  line-height: 1.23;
+  margin: 0;
+}
+
+.header p {
+  color: var(--text-body);
+  font-size: var(--font-size-base);
+  line-height: 1.42;
+  margin: 0;
+}
+
+.fields {
+  gap: var(--space-medium);
+}
+
+.identityFields {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-small);
+}
+
+.citizenship {
+  border: 0;
+  display: grid;
+  gap: var(--space-small);
+  grid-template-columns: 1fr 1fr;
+  margin: 0;
+  padding: 0;
+}
+
+.citizenship legend {
+  color: var(--text-heading);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-medium);
+  line-height: 1.42;
+  margin-bottom: var(--space-small);
+}
+
+.citizenship label {
+  align-items: center;
+  background: var(--background-white);
+  border: 1px solid var(--stroke-medium);
+  border-radius: var(--radius-extra-small);
+  color: var(--text-heading);
+  display: flex;
+  font-size: var(--font-size-base);
+  gap: var(--space-small);
+  height: 48px;
+  padding: 0 var(--space-small);
+}
+
+.citizenship label.selected {
+  background: var(--background-success-soft);
+  border-color: var(--stroke-success);
+}
+
+.citizenship input {
+  accent-color: var(--color-success);
+  height: 16px;
+  margin: 0;
+  width: 16px;
+}
+
+.actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: var(--space-xl);
+}
+
+.definitions {
+  border-top: 1px solid var(--stroke-medium);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-medium);
+  padding-top: var(--space-medium);
+}
+
+.definitions p {
+  color: var(--text-body);
+  font-size: var(--font-size-small);
+  line-height: 1.42;
+  margin: 0;
+}
+
+.definitions strong {
+  color: var(--text-heading);
+  display: block;
+  font-weight: var(--font-weight-medium);
+}
+
+@media (max-width: 640px) {
+  .header h1 {
+    font-size: var(--font-size-h1);
+  }
+
+  .citizenship {
+    grid-template-columns: 1fr;
+  }
+}
