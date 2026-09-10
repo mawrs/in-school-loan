@@ -1,0 +1,43 @@
+.nav {
+  align-items: center;
+  background: var(--color-white);
+  border-bottom: 1px solid var(--color-gray-100);
+  display: flex;
+  height: 90px;
+  justify-content: space-between;
+  padding: var(--space-small) var(--space-xl);
+}
+
+.brand {
+  align-items: center;
+  display: flex;
+  gap: 12px;
+  height: 100%;
+  min-width: 0;
+}
+
+.logo {
+  display: block;
+  height: 48px;
+  object-fit: contain;
+  width: auto;
+}
+
+.title {
+  color: var(--color-gray-dark);
+  font-size: var(--font-size-extra-large);
+  font-weight: var(--font-weight-normal);
+  line-height: 1.33;
+  white-space: nowrap;
+}
+
+@media (max-width: 640px) {
+  .nav {
+    height: 72px;
+    padding: var(--space-small) var(--space-medium);
+  }
+
+  .title {
+    display: none;
+  }
+}

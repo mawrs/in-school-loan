@@ -1,0 +1,125 @@
+.page {
+  background: var(--background-soft);
+  display: flex;
+  flex-direction: column;
+  min-height: 100svh;
+}
+
+.content {
+  display: grid;
+  flex: 1;
+  grid-template-columns: 1fr 1fr;
+  min-height: 0;
+}
+
+.imagePanel {
+  min-height: 600px;
+  overflow: hidden;
+  position: relative;
+}
+
+.imagePanel :global(img) {
+  object-fit: cover;
+}
+
+.formPanel {
+  align-items: center;
+  display: flex;
+  padding: 100px var(--space-xl);
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xxl);
+  margin: 0 auto;
+  max-width: 696px;
+  width: 100%;
+}
+
+.formHeader {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-small);
+}
+
+.formHeader h1 {
+  color: var(--color-black);
+  font-size: var(--font-size-display-medium);
+  font-weight: var(--font-weight-semibold);
+  line-height: 1.23;
+}
+
+.formHeader p,
+.loginPrompt {
+  color: var(--color-gray-dark);
+  font-size: var(--font-size-large);
+  line-height: 1.4;
+}
+
+.fields {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-small);
+  margin-top: calc(var(--space-xl) * -1);
+}
+
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-small);
+}
+
+.loginPrompt {
+  text-align: center;
+}
+
+.loginPrompt button {
+  background: transparent;
+  border: 0;
+  border-radius: var(--radius-extra-small);
+  color: var(--color-gray-dark);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
+  line-height: 1.42;
+  margin-left: var(--space-extra-small);
+  padding: var(--space-small) var(--space-extra-small);
+}
+
+.loginPrompt button:hover {
+  color: var(--color-blue);
+  text-decoration: underline;
+}
+
+.loginPrompt button:focus-visible {
+  outline: 3px solid var(--color-navyblue-background);
+  outline-offset: 2px;
+}
+
+@media (max-width: 900px) {
+  .content {
+    display: block;
+  }
+
+  .imagePanel {
+    min-height: 280px;
+  }
+
+  .formPanel {
+    padding: var(--space-xl) var(--space-medium);
+  }
+}
+
+@media (max-width: 640px) {
+  .form {
+    gap: var(--space-xl);
+  }
+
+  .formHeader h1 {
+    font-size: var(--font-size-h1);
+  }
+
+  .imagePanel {
+    display: none;
+  }
+}

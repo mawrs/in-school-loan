@@ -1,0 +1,88 @@
+.field {
+  position: relative;
+  width: 100%;
+}
+
+.input {
+  background: var(--color-white);
+  border: 1px solid var(--color-gray-200);
+  border-radius: var(--radius-extra-small);
+  color: var(--color-black);
+  font-size: var(--font-size-base);
+  height: 60px;
+  line-height: 1.4;
+  outline: none;
+  padding: 24px 16px 8px;
+  width: 100%;
+}
+
+.input::placeholder {
+  color: transparent;
+}
+
+.input:hover {
+  border-color: var(--color-gray-medium);
+}
+
+.input:focus {
+  border-color: var(--color-blue);
+  box-shadow: 0 0 0 1px var(--color-blue);
+}
+
+.label {
+  color: var(--color-gray-dark);
+  font-size: var(--font-size-base);
+  left: 17px;
+  line-height: 1.4;
+  pointer-events: none;
+  position: absolute;
+  top: 18px;
+  transform-origin: left top;
+  transition: color 150ms ease, transform 150ms ease;
+}
+
+.input:focus + .label,
+.input:not(:placeholder-shown) + .label {
+  color: var(--color-blue);
+  transform: translateY(-11px) scale(0.75);
+}
+
+.trailingElement {
+  align-items: center;
+  display: flex;
+  height: 28px;
+  position: absolute;
+  right: 16px;
+  top: 16px;
+}
+
+.visibilityButton {
+  align-items: center;
+  background: transparent;
+  border: 0;
+  border-radius: var(--radius-extra-small);
+  color: var(--color-black);
+  display: inline-flex;
+  height: 28px;
+  justify-content: center;
+  padding: 4px;
+  width: 28px;
+}
+
+.visibilityButton:hover {
+  color: var(--color-blue);
+}
+
+.visibilityButton:focus-visible {
+  outline: 2px solid var(--color-blue);
+  outline-offset: 1px;
+}
+
+.visibilityButton svg {
+  height: 20px;
+  width: 20px;
+}
+
+.input:has(+ .label + .trailingElement) {
+  padding-right: 56px;
+}
