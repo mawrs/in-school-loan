@@ -4,6 +4,7 @@ import { useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/button";
 import { CurrencyInput } from "@/components/currency-input";
+import { FlowProgress } from "@/components/flow-progress";
 import { BackLink } from "@/components/link";
 import { Stepper } from "@/components/stepper";
 import { TopNav } from "@/components/top-nav";
@@ -30,7 +31,6 @@ function currencyValue(value: string) {
 export default function LoanInfo() {
   const router = useRouter();
   const currentStep = 1;
-  const totalSteps = 4;
   const [costOfAttendance, setCostOfAttendance] = useState("");
   const [estimatedFinancialAid, setEstimatedFinancialAid] = useState("");
   const [firstName] = useState(
@@ -70,18 +70,7 @@ export default function LoanInfo() {
         title="In-School Loan"
         userName={fullName}
       />
-      <div
-        aria-label={`Step ${currentStep} of ${totalSteps}`}
-        aria-valuemax={totalSteps}
-        aria-valuemin={0}
-        aria-valuenow={currentStep}
-        className={styles.progressBar}
-        role="progressbar"
-      >
-        {Array.from({ length: totalSteps }, (_, index) => (
-          <span className={index < currentStep ? styles.progressComplete : undefined} key={index} />
-        ))}
-      </div>
+      <FlowProgress />
       <main className={styles.main}>
         <form className={styles.form} onSubmit={handleSubmit}>
           <div className={styles.header}>

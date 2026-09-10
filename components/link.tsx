@@ -1,3 +1,4 @@
+import NextLink from "next/link";
 import type { AnchorHTMLAttributes, ButtonHTMLAttributes, ReactNode } from "react";
 import styles from "./link.module.css";
 
@@ -16,6 +17,14 @@ export function Link({ children, className, href, onClick, ...props }: LinkProps
       <button className={classes} onClick={onClick} type="button">
         {children}
       </button>
+    );
+  }
+
+  if (href?.startsWith("/")) {
+    return (
+      <NextLink className={classes} href={href} {...props}>
+        {children}
+      </NextLink>
     );
   }
 

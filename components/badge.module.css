@@ -1,0 +1,21 @@
+.badge {
+  border: 1px solid var(--stroke-medium);
+  border-radius: var(--radius-small);
+  flex: 0 0 auto;
+  font-size: var(--font-size-small);
+  font-weight: var(--font-weight-normal);
+  line-height: 1.33;
+  padding: 5px 13px;
+  text-decoration: none;
+}
+
+.default {
+  background: var(--background-soft);
+  color: var(--text-disabled);
+}
+
+.success {
+  background: var(--background-success-soft);
+  border-color: var(--stroke-success);
+  color: var(--text-success);
+}

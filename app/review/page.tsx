@@ -1,8 +1,10 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/button";
 import { FloatingInput } from "@/components/floating-input";
+import { FlowProgress } from "@/components/flow-progress";
 import { BackLink } from "@/components/link";
 import { Stepper } from "@/components/stepper";
 import { TopNav } from "@/components/top-nav";
@@ -78,6 +80,7 @@ function ReviewItem({ label, value, href }: { href: string; label: string; value
 }
 
 export default function Review() {
+  const router = useRouter();
   const [firstName] = useState(() => typeof window === "undefined" ? "John" : localStorage.getItem("in-school-loans-user-first-name") || "John");
   const [lastName] = useState(() => typeof window === "undefined" ? "Doe" : localStorage.getItem("in-school-loans-user-last-name") || "Doe");
   const [email] = useState(() => typeof window === "undefined" ? "" : localStorage.getItem("in-school-loans-user-email") || "");
@@ -87,9 +90,7 @@ export default function Review() {
   return (
     <div className={styles.page}>
       <TopNav title="In-School Loan" userName={`${firstName} ${lastName}`} />
-      <div className={styles.progressBar} aria-label="Step 4 of 4" role="progressbar">
-        {Array.from({ length: 4 }, (_, index) => <span className={index < 4 ? styles.progressComplete : undefined} key={index} />)}
-      </div>
+      <FlowProgress />
       <main className={styles.main}>
         <div className={styles.content}>
           <div className={styles.header}><Stepper currentStep={4} /><h1>{firstName}, let&apos;s review your information</h1></div>
@@ -114,7 +115,7 @@ export default function Review() {
           </section>
           <div className={styles.actions}>
             <BackLink href="/income" />
-            <Button size="base">Next</Button>
+            <Button onClick={() => router.push("/terms-and-conditions")} size="base">Next</Button>
           </div>
         </div>
       </main>

@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/button";
 import { Dropdown } from "@/components/dropdown";
+import { FlowProgress } from "@/components/flow-progress";
 import { BackLink } from "@/components/link";
 import { Stepper } from "@/components/stepper";
 import { TopNav } from "@/components/top-nav";
@@ -27,9 +28,7 @@ export default function Income() {
   return (
     <div className={styles.page}>
       <TopNav title="In-School Loan" userName={`${firstName} ${lastName}`} />
-      <div className={styles.progressBar} aria-label="Step 3 of 4" role="progressbar">
-        {Array.from({ length: 4 }, (_, index) => <span className={index < 3 ? styles.progressComplete : undefined} key={index} />)}
-      </div>
+      <FlowProgress />
       <main className={styles.main}>
         <form
           className={styles.form}

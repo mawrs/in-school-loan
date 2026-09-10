@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/button";
+import { FlowProgress } from "@/components/flow-progress";
 import { BackLink } from "@/components/link";
 import { Stepper } from "@/components/stepper";
 import { TopNav } from "@/components/top-nav";
@@ -59,9 +60,7 @@ export default function LoanEligibility() {
         title="In-School Loan"
         userName={fullName}
       />
-      <div className={styles.progressBar} aria-label="Step 1 of 4" role="progressbar">
-        {Array.from({ length: 4 }, (_, index) => <span className={index === 0 ? styles.progressComplete : undefined} key={index} />)}
-      </div>
+      <FlowProgress />
       <main className={styles.main}>
         <section className={styles.content}>
           <div className={styles.header}>
