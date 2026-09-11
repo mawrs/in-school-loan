@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { TopNav } from "@/components/top-nav";
-import { useStoredUser } from "@/lib/storage";
+import { markCurrentApplicationUnderReview, useStoredUser } from "@/lib/storage";
 import styles from "./page.module.css";
 
 export default function Submitting() {
@@ -11,6 +11,7 @@ export default function Submitting() {
   const { fullName } = useStoredUser();
 
   useEffect(() => {
+    markCurrentApplicationUnderReview();
     const timer = window.setTimeout(() => router.replace("/loan-processing"), 2000);
     return () => window.clearTimeout(timer);
   }, [router]);

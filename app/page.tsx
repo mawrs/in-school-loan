@@ -7,7 +7,7 @@ import { Button } from "@/components/button";
 import { FooterDisclaimer } from "@/components/footer-disclaimer";
 import { FloatingInput } from "@/components/floating-input";
 import { TopNav } from "@/components/top-nav";
-import { resetApplicationProgress, setStoredValue, storageKeys } from "@/lib/storage";
+import { clearStoredApplications, resetApplicationProgress, setStoredValue, storageKeys } from "@/lib/storage";
 import styles from "./page.module.css";
 
 const authImage = "/auth_cover.png";
@@ -26,6 +26,7 @@ export default function Home() {
     setStoredValue(storageKeys.lastName, lastName);
     setStoredValue(storageKeys.email, email);
     resetApplicationProgress();
+    clearStoredApplications();
     router.push("/dashboard");
   }
 

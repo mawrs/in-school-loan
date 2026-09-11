@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { useRouter } from "next/navigation";
-import { removeStoredValues, storageKeys } from "@/lib/storage";
+import { clearStoredApplications, removeStoredValues, resetApplicationProgress, storageKeys } from "@/lib/storage";
 import { Button } from "./button";
 import styles from "./top-nav.module.css";
 
@@ -71,6 +71,8 @@ function AccountActions({ onSupport, userName }: Pick<TopNavProps, "onSupport" |
 
   function signOut() {
     removeStoredValues(storageKeys.firstName, storageKeys.lastName, storageKeys.email);
+    resetApplicationProgress();
+    clearStoredApplications();
     router.push("/");
   }
 

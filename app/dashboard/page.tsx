@@ -7,7 +7,7 @@ import { Button } from "@/components/button";
 import { FooterDisclaimer } from "@/components/footer-disclaimer";
 import { Link } from "@/components/link";
 import { TopNav } from "@/components/top-nav";
-import { resetApplicationProgress, useStoredUser } from "@/lib/storage";
+import { resetApplicationProgress, setStoredValue, startStoredApplication, storageKeys, useStoredApplications, useStoredUser } from "@/lib/storage";
 import styles from "./page.module.css";
 
 const loanTypes = [
@@ -28,29 +28,6 @@ const loanTypes = [
   },
 ];
 
-const pendingApplications = [
-  {
-    id: "129108",
-    primaryAction: "Continue",
-    status: "Incomplete",
-    type: "Student Loan Refi",
-  },
-  {
-    id: "129102",
-    primaryAction: "View Application",
-    status: "Under Review",
-    type: "Student Loan In-School",
-  },
-];
-
-const completedApplications = [
-  {
-    id: "129102",
-    status: "Loan Approved",
-    type: "Student Loan In-School",
-  },
-];
-
 function BankIcon() {
   return (
     <svg aria-hidden="true" fill="none" viewBox="0 0 24 24">
@@ -65,7 +42,7 @@ function ApplicationCard({
   completed = false,
   onOpen,
 }: {
-  application: (typeof pendingApplications)[number] | (typeof completedApplications)[number];
+  application: { id: string; status: string; type: string };
   completed?: boolean;
   onOpen: () => void;
 }) {
@@ -80,7 +57,7 @@ function ApplicationCard({
       <div className={styles.applicationActions}>
         {!completed ? <Button onClick={onOpen} size="small" variant="outline">Add Documents</Button> : null}
         <Button onClick={onOpen} size="small" variant={completed ? "outline" : "primary"}>
-          {"primaryAction" in application ? application.primaryAction : "View Application"}
+          {application.status === "Incomplete" ? "Continue" : "View Application"}
         </Button>
       </div>
     </article>
@@ -93,10 +70,19 @@ export default function Dashboard() {
   const [selectedLoan, setSelectedLoan] = useState<string | null>(null);
   const router = useRouter();
   const { firstName, fullName } = useStoredUser();
+  const applications = useStoredApplications();
+  const pendingApplications = applications.filter((application) => application.status !== "Loan Approved");
+  const completedApplications = applications.filter((application) => application.status === "Loan Approved");
 
   function startApplication() {
     resetApplicationProgress();
+    startStoredApplication();
     router.push("/loan-info");
+  }
+
+  function openApplication(application: { id: string; status: string }) {
+    setStoredValue(storageKeys.currentApplicationId, application.id);
+    router.push(application.status === "Incomplete" ? "/loan-info" : "/loan-processing");
   }
 
   return (
@@ -166,31 +152,35 @@ export default function Dashboard() {
             <h1 id="dashboard-title">Welcome, {firstName}</h1>
             <p>Here&apos;s an overview of your account. Please select what you would like to do.</p>
           </header>
-          <section className={styles.applicationsSection} aria-labelledby="pending-applications-title">
-            <h2 id="pending-applications-title">Pending applications</h2>
-            <div className={styles.applicationList}>
-              {pendingApplications.map((application) => (
-                <ApplicationCard
-                  application={application}
-                  key={`${application.type}-${application.id}-${application.status}`}
-                  onOpen={() => router.push("/loan-processing")}
-                />
-              ))}
-            </div>
-          </section>
-          <section className={styles.applicationsSection} aria-labelledby="completed-applications-title">
-            <h2 id="completed-applications-title">Completed applications</h2>
-            <div className={styles.applicationList}>
-              {completedApplications.map((application) => (
-                <ApplicationCard
-                  application={application}
-                  completed
-                  key={`${application.type}-${application.id}-${application.status}`}
-                  onOpen={() => router.push("/loan-processing")}
-                />
-              ))}
-            </div>
-          </section>
+          {pendingApplications.length ? (
+            <section className={styles.applicationsSection} aria-labelledby="pending-applications-title">
+              <h2 id="pending-applications-title">Pending applications</h2>
+              <div className={styles.applicationList}>
+                {pendingApplications.map((application) => (
+                  <ApplicationCard
+                    application={application}
+                    key={`${application.type}-${application.id}`}
+                    onOpen={() => openApplication(application)}
+                  />
+                ))}
+              </div>
+            </section>
+          ) : null}
+          {completedApplications.length ? (
+            <section className={styles.applicationsSection} aria-labelledby="completed-applications-title">
+              <h2 id="completed-applications-title">Completed applications</h2>
+              <div className={styles.applicationList}>
+                {completedApplications.map((application) => (
+                  <ApplicationCard
+                    application={application}
+                    completed
+                    key={`${application.type}-${application.id}`}
+                    onOpen={() => openApplication(application)}
+                  />
+                ))}
+              </div>
+            </section>
+          ) : null}
           <section className={styles.loanSection} aria-labelledby="loan-type-title">
             <h4 id="loan-type-title">Select a loan type to get started</h4>
             <div className={styles.loanGrid}>
