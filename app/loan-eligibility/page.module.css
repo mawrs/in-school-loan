@@ -3,81 +3,28 @@
   min-height: 100svh;
 }
 
-.navActions,
-.profileName,
-.stepper,
-.review div,
-.amountPicker div,
-.actions {
-  align-items: center;
-  display: flex;
-}
-
-.navActions {
-  gap: var(--space-extra-large);
-}
-
-.profileName {
-  color: var(--text-body);
-  font-size: var(--font-size-base);
-  gap: var(--space-small);
-}
-
-.profileName svg,
-.stepper svg {
-  height: 16px;
-  width: 16px;
-}
-
-.progressBar {
-  display: grid;
-  gap: var(--space-small);
-  grid-template-columns: repeat(4, 1fr);
-  height: 6px;
-}
-
-.progressBar span {
-  background: var(--background-light);
-}
-
-.progressComplete {
-  background: var(--color-success) !important;
-}
-
 .main {
   margin: 0 auto;
   max-width: 688px;
   padding: var(--space-xxl) 0 var(--space-xl);
 }
 
-.content {
+.content,
+.header,
+.title {
   display: flex;
   flex-direction: column;
+}
+
+.content {
   gap: var(--space-xl);
 }
 
 .header {
-  display: flex;
-  flex-direction: column;
   gap: var(--space-extra-small);
 }
 
-.stepper {
-  align-self: flex-start;
-  background: var(--background-white);
-  border: 1px solid var(--stroke-base);
-  border-radius: var(--radius-extra-small);
-  color: var(--text-body);
-  font-size: var(--font-size-base);
-  font-weight: var(--font-weight-medium);
-  gap: var(--space-small);
-  line-height: 1.4;
-  padding: 4px var(--space-small);
-}
-
 .title {
-  display: flex;
-  flex-direction: column;
   gap: var(--space-small);
 }
 
@@ -86,14 +33,12 @@
   font-size: var(--font-size-display-medium);
   font-weight: var(--font-weight-medium);
   line-height: 1.23;
-  margin: 0;
 }
 
 .title p {
   color: var(--text-body);
   font-size: var(--font-size-large);
   line-height: 1.4;
-  margin: 0;
 }
 
 .review {
@@ -104,7 +49,9 @@
 }
 
 .review div {
+  align-items: center;
   color: var(--text-body);
+  display: flex;
   font-size: var(--font-size-base);
   justify-content: space-between;
   line-height: 1.42;
@@ -128,86 +75,9 @@
   color: var(--text-success);
 }
 
-.amountPicker {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-extra-small);
-  position: relative;
-  padding-top: 0;
-}
-
-.amountPicker output {
-  background: var(--background-white);
-  border: 1px solid var(--stroke-medium);
-  border-radius: var(--radius-extra-small);
-  color: var(--text-heading);
-  font-size: var(--font-size-h1);
-  font-weight: var(--font-weight-medium);
-  line-height: 1.25;
-  padding: var(--space-medium) var(--space-xxl);
-  position: absolute;
-  top: 0;
-  transform: translateX(-50%);
-  width: fit-content;
-}
-
-.amountPicker output::after {
-  border-left: 12px solid transparent;
-  border-right: 12px solid transparent;
-  border-top: 12px solid var(--background-brand);
-  bottom: -12px;
-  content: "";
-  left: calc(50% - 12px);
-  position: absolute;
-}
-
-.amountPicker input {
-  appearance: none;
-  background: transparent;
-  cursor: pointer;
-  height: 24px;
-  margin: 87px 0 0;
-  width: 100%;
-}
-
-.amountPicker input::-webkit-slider-runnable-track {
-  background: var(--background-brand);
-  border-radius: var(--radius-round);
-  height: 7px;
-}
-
-.amountPicker input::-webkit-slider-thumb {
-  appearance: none;
-  background: var(--background-white);
-  border: 4px solid var(--background-brand);
-  border-radius: var(--radius-round);
-  height: 24px;
-  margin-top: -8.5px;
-  width: 24px;
-}
-
-.amountPicker input::-moz-range-track {
-  background: var(--background-brand);
-  border-radius: var(--radius-round);
-  height: 7px;
-}
-
-.amountPicker input::-moz-range-thumb {
-  background: var(--background-white);
-  border: 4px solid var(--background-brand);
-  border-radius: var(--radius-round);
-  height: 24px;
-  width: 24px;
-}
-
-.amountPicker div {
-  color: var(--text-heading);
-  font-size: var(--font-size-large);
-  justify-content: space-between;
-  line-height: 1.33;
-}
-
 .actions {
+  align-items: center;
+  display: flex;
   justify-content: space-between;
   margin-top: var(--space-xxl);
 }
@@ -215,14 +85,6 @@
 @media (max-width: 640px) {
   .main {
     padding-inline: var(--space-medium);
-  }
-
-  .navActions {
-    gap: var(--space-small);
-  }
-
-  .profileName {
-    display: none;
   }
 
   .title h1 {

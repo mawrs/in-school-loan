@@ -2,15 +2,17 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { AmountSlider } from "@/components/amount-slider";
 import { Button } from "@/components/button";
 import { FlowProgress } from "@/components/flow-progress";
 import { BackLink } from "@/components/link";
 import { Stepper } from "@/components/stepper";
 import { TopNav } from "@/components/top-nav";
+import { storageKeys, useStoredUser, useStoredValue } from "@/lib/storage";
 import styles from "./page.module.css";
 
-function parseAmount(value: string | null, fallback: number) {
-  const amount = Number(value?.replaceAll(",", ""));
+function parseAmount(value: string, fallback: number) {
+  const amount = Number(value.replaceAll(",", ""));
   return Number.isFinite(amount) && amount > 0 ? amount : fallback;
 }
 
@@ -25,33 +27,17 @@ function formatAmount(value: number, cents = false) {
 
 export default function LoanEligibility() {
   const router = useRouter();
-  const [firstName] = useState(
-    () => (typeof window === "undefined" ? "John" : localStorage.getItem("in-school-loans-user-first-name") || "John"),
-  );
-  const [lastName] = useState(
-    () => (typeof window === "undefined" ? "" : localStorage.getItem("in-school-loans-user-last-name") || ""),
-  );
-  const [costOfAttendance] = useState(
-    () => parseAmount(typeof window === "undefined" ? null : localStorage.getItem("in-school-loans-cost-of-attendance"), 25000),
-  );
-  const [financialAid] = useState(
-    () => parseAmount(typeof window === "undefined" ? null : localStorage.getItem("in-school-loans-financial-aid"), 13024),
-  );
+  const { fullName } = useStoredUser();
+  const costOfAttendance = parseAmount(useStoredValue(storageKeys.costOfAttendance), 25000);
+  const financialAid = parseAmount(useStoredValue(storageKeys.financialAid), 13024);
   const eligibleAmount = Math.max(0, costOfAttendance - financialAid);
-  const fullName = [firstName, lastName].filter(Boolean).join(" ");
   const minimumAmount = Math.min(5000, eligibleAmount);
-  const [requestedAmount, setRequestedAmount] = useState(eligibleAmount);
-  const sliderPosition =
-    eligibleAmount === minimumAmount
-      ? 100
-      : ((requestedAmount - minimumAmount) / (eligibleAmount - minimumAmount)) * 100;
+  const [selectedAmount, setSelectedAmount] = useState<number | null>(null);
+  const requestedAmount = Math.min(selectedAmount ?? eligibleAmount, eligibleAmount);
 
   return (
     <div className={styles.page}>
-      <TopNav
-        title="In-School Loan"
-        userName={fullName}
-      />
+      <TopNav title="In-School Loan" userName={fullName} />
       <FlowProgress />
       <main className={styles.main}>
         <section className={styles.content}>
@@ -67,24 +53,16 @@ export default function LoanEligibility() {
             <div><span>Financial Aid</span><strong className={styles.aidAmount}>− {formatAmount(financialAid)}</strong></div>
             <div><strong>Max Borrow Amount</strong><strong className={styles.eligibleAmount}>= {formatAmount(eligibleAmount)}</strong></div>
           </section>
-          <div className={styles.amountPicker}>
-            <output
-              style={{
-                left: `${sliderPosition}%`,
-              }}
-            >
-              {formatAmount(requestedAmount)}
-            </output>
-            <input
-              aria-label="Requested loan amount"
-              max={eligibleAmount}
-              min={minimumAmount}
-              onChange={(event) => setRequestedAmount(Number(event.target.value))}
-              type="range"
-              value={requestedAmount}
-            />
-            <div><span>{formatAmount(minimumAmount)}</span><span>{formatAmount(eligibleAmount)}</span></div>
-          </div>
+          <AmountSlider
+            ariaLabel="Requested loan amount"
+            formatValue={(value) => formatAmount(value)}
+            max={eligibleAmount}
+            maxLabel={formatAmount(eligibleAmount)}
+            min={minimumAmount}
+            minLabel={formatAmount(minimumAmount)}
+            onChange={setSelectedAmount}
+            value={requestedAmount}
+          />
         </section>
         <div className={styles.actions}>
           <BackLink href="/loan-info" />

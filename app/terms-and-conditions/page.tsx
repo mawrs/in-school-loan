@@ -7,6 +7,7 @@ import { Badge } from "@/components/badge";
 import { Button } from "@/components/button";
 import { BackLink } from "@/components/link";
 import { TopNav } from "@/components/top-nav";
+import { setStoredValue, storageKeys, useStoredUser } from "@/lib/storage";
 import styles from "./page.module.css";
 
 const acknowledgements = [
@@ -16,8 +17,7 @@ const acknowledgements = [
 
 export default function TermsAndConditions() {
   const router = useRouter();
-  const [firstName] = useState(() => typeof window === "undefined" ? "John" : localStorage.getItem("in-school-loans-user-first-name") || "John");
-  const [lastName] = useState(() => typeof window === "undefined" ? "Doe" : localStorage.getItem("in-school-loans-user-last-name") || "Doe");
+  const { fullName } = useStoredUser();
   const [accepted, setAccepted] = useState<string[]>([]);
   const [activeAgreement, setActiveAgreement] = useState<string | null>(null);
   const [hasReadAgreement, setHasReadAgreement] = useState(false);
@@ -42,23 +42,16 @@ export default function TermsAndConditions() {
   }
 
   function checkRate() {
-    localStorage.setItem("in-school-loans-acknowledgements-accepted", "true");
+    setStoredValue(storageKeys.acknowledgementsAccepted, "true");
     router.push("/rates");
   }
 
   return (
     <div className={styles.page}>
-      <TopNav title="In-School Loan" userName={`${firstName} ${lastName}`} />
+      <TopNav title="In-School Loan" userName={fullName} />
       <main className={styles.main}>
         <div className={styles.content}>
-          <Image
-            alt=""
-            className={styles.illustration}
-            height={251}
-            src="http://localhost:3845/assets/cf7225af7e2ce4d054b1d2c00305e8134f1a1d6e.png"
-            unoptimized
-            width={251}
-          />
+          <Image alt="" className={styles.illustration} height={251} priority src="/agreements.svg" width={251} />
           <h1>Almost there, your rate is next!</h1>
           <section aria-labelledby="acknowledgements-heading" className={styles.acknowledgements}>
             <p id="acknowledgements-heading">

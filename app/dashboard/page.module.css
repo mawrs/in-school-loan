@@ -233,14 +233,56 @@
   margin: 0;
 }
 
-.notice {
-  background: var(--color-white);
-  border-radius: var(--radius-extra-small);
-  color: #605e5c;
-  font-size: var(--font-size-base);
-  line-height: 1.42;
+.applicationsSection {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-medium);
+}
+
+.applicationsSection h2,
+.loanSection h4 {
+  color: var(--color-black);
+  font-size: var(--font-size-h4);
+  font-weight: var(--font-weight-medium);
+  line-height: 1.4;
   margin: 0;
-  padding: var(--space-large) var(--space-extra-large);
+}
+
+.applicationList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-small);
+}
+
+.applicationCard {
+  background: var(--background-white);
+  border: 1px solid var(--stroke-light);
+  border-radius: var(--radius-extra-small);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-small);
+  padding: var(--space-medium);
+}
+
+.applicationHeader {
+  align-items: center;
+  display: flex;
+  gap: var(--space-small);
+  justify-content: space-between;
+}
+
+.applicationHeader h4 {
+  color: var(--text-brand);
+  font-size: var(--font-size-h4);
+  font-weight: var(--font-weight-semibold);
+  line-height: 1.4;
+  margin: 0;
+}
+
+.applicationActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-small);
 }
 
 .loanSection {
@@ -250,16 +292,13 @@
 }
 
 .loanSection h4 {
-  color: var(--color-black);
-  font-size: var(--font-size-h4);
-  font-weight: var(--font-weight-medium);
-  line-height: 1.4;
+  margin: 0;
 }
 
 .loanGrid {
   display: grid;
   gap: var(--space-medium);
-  grid-template-columns: 1fr;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
 .loanOption {
@@ -353,6 +392,11 @@
 
   .loanGrid {
     grid-template-columns: 1fr;
+  }
+
+  .applicationHeader {
+    align-items: flex-start;
+    flex-direction: column;
   }
 }
 

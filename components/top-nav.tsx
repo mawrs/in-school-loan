@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { useRouter } from "next/navigation";
+import { removeStoredValues, storageKeys } from "@/lib/storage";
 import { Button } from "./button";
 import styles from "./top-nav.module.css";
 
@@ -32,6 +33,7 @@ export function TopNav({
           alt={logoAlt}
           className={styles.logo}
           height={74}
+          priority
           src={logoSrc}
           unoptimized
           width={111}
@@ -68,9 +70,7 @@ function AccountActions({ onSupport, userName }: Pick<TopNavProps, "onSupport" |
   }, []);
 
   function signOut() {
-    localStorage.removeItem("in-school-loans-user-first-name");
-    localStorage.removeItem("in-school-loans-user-last-name");
-    localStorage.removeItem("in-school-loans-user-email");
+    removeStoredValues(storageKeys.firstName, storageKeys.lastName, storageKeys.email);
     router.push("/");
   }
 
@@ -83,6 +83,7 @@ function AccountActions({ onSupport, userName }: Pick<TopNavProps, "onSupport" |
         </button>
         {isOpen ? (
           <div className={styles.profileDropdown} role="menu">
+            <button onClick={() => router.push("/dashboard")} role="menuitem" type="button">Dashboard</button>
             <button onClick={() => router.push("/dashboard")} role="menuitem" type="button">My Profile</button>
             <button onClick={signOut} role="menuitem" type="button">Sign Out</button>
           </div>

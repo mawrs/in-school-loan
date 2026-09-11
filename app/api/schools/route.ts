@@ -6,7 +6,7 @@ export async function GET(request: NextRequest) {
   const query = request.nextUrl.searchParams.get("q")?.trim();
   const apiKey = process.env.COLLEGE_SCORECARD_API_KEY;
 
-  if (!query || query.length < 2) {
+  if (!query || query.length < 1) {
     return NextResponse.json([]);
   }
 
@@ -18,7 +18,7 @@ export async function GET(request: NextRequest) {
     api_key: apiKey,
     fields: "id,school.name,school.city,school.state",
     per_page: "8",
-    "school.name": query,
+    "school.name": query.length === 1 ? `${query}*` : `${query}%`,
   });
   const response = await fetch(`${endpoint}?${searchParams}`, { next: { revalidate: 86400 } });
 

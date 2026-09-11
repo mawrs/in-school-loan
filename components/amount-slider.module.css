@@ -1,0 +1,91 @@
+.slider {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-extra-small);
+  position: relative;
+}
+
+.slider output {
+  background: var(--background-white);
+  border: 1px solid var(--stroke-medium);
+  border-radius: var(--radius-extra-small);
+  color: var(--text-heading);
+  font-size: var(--font-size-h1);
+  font-weight: var(--font-weight-medium);
+  left: var(--slider-position);
+  line-height: 1.25;
+  padding: var(--space-medium) var(--space-xxl);
+  position: absolute;
+  top: 0;
+  transform: translateX(-50%);
+  width: fit-content;
+}
+
+.slider output::after {
+  border-left: 12px solid transparent;
+  border-right: 12px solid transparent;
+  border-top: 12px solid var(--background-brand);
+  bottom: -12px;
+  content: "";
+  left: calc(50% - 12px);
+  position: absolute;
+}
+
+.slider input {
+  appearance: none;
+  background: transparent;
+  cursor: pointer;
+  height: 24px;
+  margin: 87px 0 0;
+  width: 100%;
+}
+
+.slider input::-webkit-slider-runnable-track {
+  background: linear-gradient(
+    to right,
+    var(--background-brand) 0%,
+    var(--background-brand) var(--slider-position),
+    var(--stroke-medium) var(--slider-position),
+    var(--stroke-medium) 100%
+  );
+  border-radius: var(--radius-round);
+  height: 7px;
+}
+
+.slider input::-webkit-slider-thumb {
+  appearance: none;
+  background: var(--background-white);
+  border: 4px solid var(--background-brand);
+  border-radius: var(--radius-round);
+  height: 24px;
+  margin-top: -8.5px;
+  width: 24px;
+}
+
+.slider input::-moz-range-track {
+  background: var(--stroke-medium);
+  border-radius: var(--radius-round);
+  height: 7px;
+}
+
+.slider input::-moz-range-progress {
+  background: var(--background-brand);
+  border-radius: var(--radius-round);
+  height: 7px;
+}
+
+.slider input::-moz-range-thumb {
+  background: var(--background-white);
+  border: 4px solid var(--background-brand);
+  border-radius: var(--radius-round);
+  height: 24px;
+  width: 24px;
+}
+
+.slider > div {
+  color: var(--text-heading);
+  display: flex;
+  font-size: var(--font-size-large);
+  justify-content: space-between;
+  line-height: 1.33;
+}

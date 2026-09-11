@@ -4,20 +4,39 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import styles from "./combobox.module.css";
 
 type ComboboxProps = {
+  /** Set to false when `options` are already filtered (e.g. server-side search results). */
+  filterOptions?: boolean;
+  isLoading?: boolean;
   label: string;
+  minimumSearchLength?: number;
   name: string;
   onValueChange: (value: string) => void;
   options: string[];
   value: string;
 };
 
-export function Combobox({ label, name, onValueChange, options, value }: ComboboxProps) {
+export function Combobox({
+  filterOptions = true,
+  isLoading = false,
+  label,
+  minimumSearchLength = 0,
+  name,
+  onValueChange,
+  options,
+  value,
+}: ComboboxProps) {
   const [isOpen, setIsOpen] = useState(false);
   const comboboxRef = useRef<HTMLDivElement>(null);
   const matches = useMemo(
-    () => options.filter((option) => option.toLowerCase().includes(value.toLowerCase())),
-    [options, value],
+    () => (filterOptions ? options.filter((option) => option.toLowerCase().includes(value.toLowerCase())) : options),
+    [filterOptions, options, value],
   );
+
+  const emptyMessage = value.trim().length < minimumSearchLength
+    ? `Enter at least ${minimumSearchLength} characters to search`
+    : isLoading
+      ? "Searching…"
+      : `No results found for ${value}`;
 
   useEffect(() => {
     const closeOptions = (event: MouseEvent) => {
@@ -70,7 +89,7 @@ export function Combobox({ label, name, onValueChange, options, value }: Combobo
               </button>
             ))
           ) : value ? (
-            <p className={styles.emptyMessage}>No results found for {value}</p>
+            <p className={styles.emptyMessage}>{emptyMessage}</p>
           ) : null}
         </div>
       ) : null}

@@ -1,0 +1,134 @@
+.page {
+  background: var(--background-soft);
+  min-height: 100svh;
+}
+
+.main {
+  margin: 0 auto;
+  max-width: 688px;
+  padding: var(--space-xl) 0 var(--space-xxl);
+}
+
+.form,
+.form > header {
+  display: flex;
+  flex-direction: column;
+}
+
+.form {
+  gap: var(--space-large);
+}
+
+.form > header {
+  gap: var(--space-small);
+}
+
+.form > header h1 {
+  color: var(--text-heading);
+  font-size: var(--font-size-display-medium);
+  font-weight: var(--font-weight-medium);
+  line-height: 1.23;
+  margin: 0;
+}
+
+.form > header p {
+  color: var(--text-body);
+  font-size: var(--font-size-base);
+  line-height: 1.42;
+  margin: 0;
+}
+
+.summary {
+  background: var(--background-white);
+  border: 1px solid var(--stroke-medium);
+  border-radius: var(--radius-extra-small);
+  padding: 0 var(--space-medium);
+}
+
+.summaryRow {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  padding: var(--space-medium) 0;
+}
+
+.summaryRow + .summaryRow {
+  border-top: 1px solid var(--stroke-light);
+}
+
+.summaryRow > div {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-extra-small);
+}
+
+.summaryRow span {
+  color: var(--text-body);
+  font-size: var(--font-size-small);
+}
+
+.summaryRow strong {
+  color: var(--text-heading);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-medium);
+  line-height: 1.4;
+}
+
+.duration h2 {
+  color: var(--text-heading);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-medium);
+  line-height: 1.4;
+  margin: 0 0 var(--space-small);
+}
+
+.fieldRow {
+  display: grid;
+  gap: var(--space-small);
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.addAddress {
+  align-self: end;
+}
+
+.addAddress span {
+  color: var(--text-brand);
+  font-size: var(--font-size-large);
+  margin-right: var(--space-small);
+}
+
+.previousAddress {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-small);
+}
+
+.previousAddress h2 {
+  color: var(--text-heading);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-medium);
+  line-height: 1.4;
+  margin: 0;
+}
+
+.actions {
+  display: flex;
+  gap: var(--space-small);
+  justify-content: space-between;
+  margin-top: var(--space-xl);
+}
+
+@media (max-width: 640px) {
+  .main {
+    padding-inline: var(--space-medium);
+  }
+
+  .form > header h1 {
+    font-size: var(--font-size-h1);
+  }
+
+  .fieldRow {
+    grid-template-columns: 1fr;
+  }
+}

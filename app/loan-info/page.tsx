@@ -8,6 +8,7 @@ import { FlowProgress } from "@/components/flow-progress";
 import { BackLink } from "@/components/link";
 import { Stepper } from "@/components/stepper";
 import { TopNav } from "@/components/top-nav";
+import { setStoredValue, storageKeys, useStoredUser } from "@/lib/storage";
 import styles from "./page.module.css";
 
 function currencyValue(value: string) {
@@ -16,22 +17,9 @@ function currencyValue(value: string) {
 
 export default function LoanInfo() {
   const router = useRouter();
-  const currentStep = 1;
+  const { firstName, fullName } = useStoredUser();
   const [costOfAttendance, setCostOfAttendance] = useState("");
   const [estimatedFinancialAid, setEstimatedFinancialAid] = useState("");
-  const [firstName] = useState(
-    () =>
-      typeof window === "undefined"
-        ? "John"
-        : localStorage.getItem("in-school-loans-user-first-name") || "John",
-  );
-  const [lastName] = useState(
-    () =>
-      typeof window === "undefined"
-        ? ""
-        : localStorage.getItem("in-school-loans-user-last-name") || "",
-  );
-  const fullName = [firstName, lastName].filter(Boolean).join(" ");
   const costAmount = currencyValue(costOfAttendance);
   const financialAidAmount = currencyValue(estimatedFinancialAid);
   const financialAidError =
@@ -45,22 +33,19 @@ export default function LoanInfo() {
       return;
     }
 
-    localStorage.setItem("in-school-loans-cost-of-attendance", costOfAttendance);
-    localStorage.setItem("in-school-loans-financial-aid", estimatedFinancialAid);
+    setStoredValue(storageKeys.costOfAttendance, costOfAttendance);
+    setStoredValue(storageKeys.financialAid, estimatedFinancialAid);
     router.push("/loan-eligibility");
   };
 
   return (
     <div className={styles.page}>
-      <TopNav
-        title="In-School Loan"
-        userName={fullName}
-      />
+      <TopNav title="In-School Loan" userName={fullName} />
       <FlowProgress />
       <main className={styles.main}>
         <form className={styles.form} onSubmit={handleSubmit}>
           <div className={styles.header}>
-            <Stepper currentStep={currentStep} />
+            <Stepper currentStep={1} />
             <div className={styles.title}>
               <h1>Nice to meet you, {firstName}. What&apos;s your cost of attendance?</h1>
               <p>

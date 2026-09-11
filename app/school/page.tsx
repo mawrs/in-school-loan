@@ -10,6 +10,7 @@ import { FlowProgress } from "@/components/flow-progress";
 import { BackLink } from "@/components/link";
 import { Stepper } from "@/components/stepper";
 import { TopNav } from "@/components/top-nav";
+import { useStoredUser } from "@/lib/storage";
 import styles from "./page.module.css";
 
 const degreePrograms = {
@@ -84,18 +85,14 @@ const gradeLevels = {
 
 export default function School() {
   const router = useRouter();
-  const [firstName] = useState(
-    () => (typeof window === "undefined" ? "John" : localStorage.getItem("in-school-loans-user-first-name") || "John"),
-  );
-  const [lastName] = useState(
-    () => (typeof window === "undefined" ? "Doe" : localStorage.getItem("in-school-loans-user-last-name") || "Doe"),
-  );
+  const { fullName } = useStoredUser();
   const [degreeLevel, setDegreeLevel] = useState("");
   const [schoolName, setSchoolName] = useState("");
   const [schoolOptions, setSchoolOptions] = useState<string[]>([]);
+  const [isSearchingSchools, setIsSearchingSchools] = useState(false);
 
   useEffect(() => {
-    if (schoolName.trim().length < 2) {
+    if (schoolName.trim().length < 1) {
       return;
     }
 
@@ -105,16 +102,13 @@ export default function School() {
         const response = await fetch(`/api/schools?q=${encodeURIComponent(schoolName)}`, {
           signal: controller.signal,
         });
-        if (!response.ok) {
-          setSchoolOptions([]);
-          return;
-        }
-
-        const schools: { label: string }[] = await response.json();
+        const schools: { label: string }[] = response.ok ? await response.json() : [];
         setSchoolOptions(schools.map((school) => school.label));
+        setIsSearchingSchools(false);
       } catch {
         if (!controller.signal.aborted) {
           setSchoolOptions([]);
+          setIsSearchingSchools(false);
         }
       }
     }, 250);
@@ -127,7 +121,7 @@ export default function School() {
 
   return (
     <div className={styles.page}>
-      <TopNav title="In-School Loan" userName={`${firstName} ${lastName}`} />
+      <TopNav title="In-School Loan" userName={fullName} />
       <FlowProgress />
       <main className={styles.main}>
         <form
@@ -159,11 +153,16 @@ export default function School() {
               />
             </div>
             <Combobox
+              filterOptions={false}
+              isLoading={isSearchingSchools}
               label="School Name"
+              minimumSearchLength={1}
               name="schoolName"
               onValueChange={(value) => {
                 setSchoolName(value);
-                if (value.trim().length < 2) setSchoolOptions([]);
+                if (schoolOptions.includes(value)) return;
+                setSchoolOptions([]);
+                setIsSearchingSchools(value.trim().length >= 1);
               }}
               options={schoolOptions}
               value={schoolName}

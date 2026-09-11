@@ -60,6 +60,7 @@
 
 .enrollmentField {
   gap: var(--space-small);
+  margin-top: var(--space-medium);
 }
 
 .enrollmentField > span {

@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/button";
 import { Dropdown } from "@/components/dropdown";
@@ -9,20 +8,16 @@ import { FlowProgress } from "@/components/flow-progress";
 import { BackLink } from "@/components/link";
 import { Stepper } from "@/components/stepper";
 import { TopNav } from "@/components/top-nav";
+import { useStoredUser } from "@/lib/storage";
 import styles from "./page.module.css";
 
 export default function CoSignerDetails() {
   const router = useRouter();
-  const [firstName] = useState(
-    () => (typeof window === "undefined" ? "John" : localStorage.getItem("in-school-loans-user-first-name") || "John"),
-  );
-  const [lastName] = useState(
-    () => (typeof window === "undefined" ? "Doe" : localStorage.getItem("in-school-loans-user-last-name") || "Doe"),
-  );
+  const { fullName } = useStoredUser();
 
   return (
     <div className={styles.page}>
-      <TopNav title="In-School Loan" userName={`${firstName} ${lastName}`} />
+      <TopNav title="In-School Loan" userName={fullName} />
       <FlowProgress />
       <main className={styles.main}>
         <form

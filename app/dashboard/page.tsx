@@ -2,10 +2,12 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { Badge } from "@/components/badge";
 import { Button } from "@/components/button";
 import { FooterDisclaimer } from "@/components/footer-disclaimer";
 import { Link } from "@/components/link";
 import { TopNav } from "@/components/top-nav";
+import { resetApplicationProgress, useStoredUser } from "@/lib/storage";
 import styles from "./page.module.css";
 
 const loanTypes = [
@@ -26,6 +28,29 @@ const loanTypes = [
   },
 ];
 
+const pendingApplications = [
+  {
+    id: "129108",
+    primaryAction: "Continue",
+    status: "Incomplete",
+    type: "Student Loan Refi",
+  },
+  {
+    id: "129102",
+    primaryAction: "View Application",
+    status: "Under Review",
+    type: "Student Loan In-School",
+  },
+];
+
+const completedApplications = [
+  {
+    id: "129102",
+    status: "Loan Approved",
+    type: "Student Loan In-School",
+  },
+];
+
 function BankIcon() {
   return (
     <svg aria-hidden="true" fill="none" viewBox="0 0 24 24">
@@ -35,34 +60,56 @@ function BankIcon() {
   );
 }
 
+function ApplicationCard({
+  application,
+  completed = false,
+  onOpen,
+}: {
+  application: (typeof pendingApplications)[number] | (typeof completedApplications)[number];
+  completed?: boolean;
+  onOpen: () => void;
+}) {
+  return (
+    <article className={styles.applicationCard}>
+      <div className={styles.applicationHeader}>
+        <h4>{application.type} (#{application.id})</h4>
+        <Badge variant={completed ? "success" : application.status === "Incomplete" ? "warning" : "default"}>
+          {application.status}
+        </Badge>
+      </div>
+      <div className={styles.applicationActions}>
+        {!completed ? <Button onClick={onOpen} size="small" variant="outline">Add Documents</Button> : null}
+        <Button onClick={onOpen} size="small" variant={completed ? "outline" : "primary"}>
+          {"primaryAction" in application ? application.primaryAction : "View Application"}
+        </Button>
+      </div>
+    </article>
+  );
+}
+
 export default function Dashboard() {
   const [isRequirementsOpen, setIsRequirementsOpen] = useState(false);
   const [isSupportOpen, setIsSupportOpen] = useState(false);
   const [selectedLoan, setSelectedLoan] = useState<string | null>(null);
   const router = useRouter();
-  const [user] = useState(() => {
-    if (typeof window === "undefined") {
-      return { firstName: "John", lastName: "" };
-    }
+  const { firstName, fullName } = useStoredUser();
 
-    return {
-      firstName:
-        localStorage.getItem("in-school-loans-user-first-name") ||
-        localStorage.getItem("in-school-loans-user-name") ||
-        "John",
-      lastName: localStorage.getItem("in-school-loans-user-last-name") || "",
-    };
-  });
-  const fullName = [user.firstName, user.lastName].filter(Boolean).join(" ");
+  function startApplication() {
+    resetApplicationProgress();
+    router.push("/loan-info");
+  }
 
   return (
     <div className={styles.page}>
-      <TopNav
-        onSupport={() => setIsSupportOpen(true)}
-        userName={fullName}
-      />
+      <TopNav onSupport={() => setIsSupportOpen(true)} userName={fullName} />
       {isSupportOpen ? (
-        <div className={styles.dialogBackdrop} role="presentation">
+        <div
+          className={styles.dialogBackdrop}
+          onClick={(event) => {
+            if (event.target === event.currentTarget) setIsSupportOpen(false);
+          }}
+          role="presentation"
+        >
           <section
             aria-labelledby="support-title"
             aria-modal="true"
@@ -84,7 +131,13 @@ export default function Dashboard() {
         </div>
       ) : null}
       {isRequirementsOpen ? (
-        <div className={styles.dialogBackdrop} role="presentation">
+        <div
+          className={styles.dialogBackdrop}
+          onClick={(event) => {
+            if (event.target === event.currentTarget) setIsRequirementsOpen(false);
+          }}
+          role="presentation"
+        >
           <section
             aria-labelledby="requirements-title"
             aria-modal="true"
@@ -110,10 +163,34 @@ export default function Dashboard() {
       <main className={styles.main}>
         <section className={styles.content} aria-labelledby="dashboard-title">
           <header className={styles.header}>
-            <h1 id="dashboard-title">Welcome, {user.firstName}</h1>
+            <h1 id="dashboard-title">Welcome, {firstName}</h1>
             <p>Here&apos;s an overview of your account. Please select what you would like to do.</p>
           </header>
-          <p className={styles.notice}>You have no applications in progress.</p>
+          <section className={styles.applicationsSection} aria-labelledby="pending-applications-title">
+            <h2 id="pending-applications-title">Pending applications</h2>
+            <div className={styles.applicationList}>
+              {pendingApplications.map((application) => (
+                <ApplicationCard
+                  application={application}
+                  key={`${application.type}-${application.id}-${application.status}`}
+                  onOpen={() => router.push("/loan-processing")}
+                />
+              ))}
+            </div>
+          </section>
+          <section className={styles.applicationsSection} aria-labelledby="completed-applications-title">
+            <h2 id="completed-applications-title">Completed applications</h2>
+            <div className={styles.applicationList}>
+              {completedApplications.map((application) => (
+                <ApplicationCard
+                  application={application}
+                  completed
+                  key={`${application.type}-${application.id}-${application.status}`}
+                  onOpen={() => router.push("/loan-processing")}
+                />
+              ))}
+            </div>
+          </section>
           <section className={styles.loanSection} aria-labelledby="loan-type-title">
             <h4 id="loan-type-title">Select a loan type to get started</h4>
             <div className={styles.loanGrid}>
@@ -128,7 +205,7 @@ export default function Dashboard() {
                     aria-pressed={selectedLoan === loan.name}
                     onClick={() => {
                       if (loan.name === "In-School Loan") {
-                        setSelectedLoan(loan.name);
+                        setSelectedLoan((current) => (current === loan.name ? null : loan.name));
                       }
                     }}
                     type="button"
@@ -153,7 +230,7 @@ export default function Dashboard() {
             <Button
               disabled={!selectedLoan}
               fullWidth
-              onClick={() => router.push("/loan-info")}
+              onClick={startApplication}
               size="base"
             >
               Get a rate in 2 minutes

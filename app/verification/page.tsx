@@ -8,6 +8,7 @@ import { FlowProgress } from "@/components/flow-progress";
 import { BackLink } from "@/components/link";
 import { Stepper } from "@/components/stepper";
 import { TopNav } from "@/components/top-nav";
+import { useStoredUser } from "@/lib/storage";
 import styles from "./page.module.css";
 
 function formatPhoneNumber(value: string) {
@@ -26,23 +27,12 @@ function formatPhoneNumber(value: string) {
 
 export default function Verification() {
   const router = useRouter();
-  const [firstName] = useState(
-    () => (typeof window === "undefined" ? "John" : localStorage.getItem("in-school-loans-user-first-name") || "John"),
-  );
-  const [lastName] = useState(
-    () => (typeof window === "undefined" ? "Doe" : localStorage.getItem("in-school-loans-user-last-name") || "Doe"),
-  );
-  const [email] = useState(
-    () => (typeof window === "undefined" ? "" : localStorage.getItem("in-school-loans-user-email") || ""),
-  );
+  const { email, firstName, fullName, lastName } = useStoredUser();
   const [phoneNumber, setPhoneNumber] = useState("");
 
   return (
     <div className={styles.page}>
-      <TopNav
-        title="In-School Loan"
-        userName={`${firstName} ${lastName}`}
-      />
+      <TopNav title="In-School Loan" userName={fullName} />
       <FlowProgress />
       <main className={styles.main}>
         <form
@@ -56,7 +46,7 @@ export default function Verification() {
             <Stepper currentStep={2} />
             <h1>Let&apos;s verify your information</h1>
           </div>
-          <div className={styles.fields}>
+          <div className={styles.fields} key={`${fullName}-${email}`}>
             <div className={styles.nameFields}>
               <FloatingInput defaultValue={firstName} label="First Name" name="firstName" />
               <FloatingInput label="Middle Initial (Optional)" maxLength={1} name="middleInitial" />

@@ -7,21 +7,17 @@ import { FlowProgress } from "@/components/flow-progress";
 import { BackLink } from "@/components/link";
 import { Stepper } from "@/components/stepper";
 import { TopNav } from "@/components/top-nav";
+import { useStoredUser } from "@/lib/storage";
 import styles from "./page.module.css";
 
 export default function CoSigner() {
   const router = useRouter();
+  const { fullName } = useStoredUser();
   const [hasCoSigner, setHasCoSigner] = useState(false);
-  const [firstName] = useState(
-    () => (typeof window === "undefined" ? "John" : localStorage.getItem("in-school-loans-user-first-name") || "John"),
-  );
-  const [lastName] = useState(
-    () => (typeof window === "undefined" ? "Doe" : localStorage.getItem("in-school-loans-user-last-name") || "Doe"),
-  );
 
   return (
     <div className={styles.page}>
-      <TopNav title="In-School Loan" userName={`${firstName} ${lastName}`} />
+      <TopNav title="In-School Loan" userName={fullName} />
       <FlowProgress />
       <main className={styles.main}>
         <form

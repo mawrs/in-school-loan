@@ -4,6 +4,7 @@ import { useState, type ReactNode } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/button";
 import { TopNav } from "@/components/top-nav";
+import { useStoredUser } from "@/lib/storage";
 import styles from "./page.module.css";
 
 type Rate = {
@@ -62,8 +63,7 @@ function RateValue({ label, originalValue, showLabel, value }: { label?: ReactNo
 
 export default function Rates() {
   const router = useRouter();
-  const [firstName] = useState(() => typeof window === "undefined" ? "Marc" : localStorage.getItem("in-school-loans-user-first-name") || "Marc");
-  const [lastName] = useState(() => typeof window === "undefined" ? "Schoonover" : localStorage.getItem("in-school-loans-user-last-name") || "Schoonover");
+  const { fullName } = useStoredUser();
   const [paymentType, setPaymentType] = useState("Immediate");
   const [selectedRate, setSelectedRate] = useState<string | null>(null);
   const [autoPayEnabled, setAutoPayEnabled] = useState(true);
@@ -77,10 +77,10 @@ export default function Rates() {
 
   return (
     <div className={styles.page}>
-      <TopNav title="Welcome to Education Loan Finance" userName={`${firstName} ${lastName}`} />
+      <TopNav title="Welcome to Education Loan Finance" userName={fullName} />
       <main className={styles.main}>
         <section className={styles.congrats}>
-          <h1>Congrats {firstName} {lastName}!</h1>
+          <h1>Congrats {fullName}!</h1>
           <p>Pending final review and verification you are conditionally pre-qualified for the following loan products, respective interest rates, and monthly payment(s) for each loan term.</p>
         </section>
         <div aria-label="Payment type" className={styles.paymentTypes} role="tablist">

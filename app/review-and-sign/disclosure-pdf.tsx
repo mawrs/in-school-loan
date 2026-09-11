@@ -25,10 +25,6 @@ export default function DisclosurePdf({ src, title }: { src: string; title: stri
     return () => observer.disconnect();
   }, []);
 
-  useEffect(() => {
-    setContentHeight(undefined);
-  }, [src]);
-
   function trimWhitespace() {
     requestAnimationFrame(() => {
       const page = containerRef.current?.querySelector(".react-pdf__Page");
@@ -42,7 +38,7 @@ export default function DisclosurePdf({ src, title }: { src: string; title: stri
   }
 
   return (
-    <div className={styles.disclosurePdf} ref={containerRef}>
+    <div aria-label={title} className={styles.disclosurePdf} ref={containerRef} role="document">
       <div className={styles.pdfCrop} style={contentHeight ? { height: contentHeight } : undefined}>
         <Document file={src} loading="Loading disclosure…" noData="Disclosure is unavailable.">
           <Page onRenderTextLayerSuccess={trimWhitespace} pageNumber={1} width={pageWidth} />

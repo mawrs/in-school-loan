@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/button";
 import { FloatingInput } from "@/components/floating-input";
@@ -8,6 +8,8 @@ import { FlowProgress } from "@/components/flow-progress";
 import { BackLink } from "@/components/link";
 import { Stepper } from "@/components/stepper";
 import { TopNav } from "@/components/top-nav";
+import { useAddressAutocomplete } from "@/lib/google-maps";
+import { storageKeys, useStoredUser, useStoredValue } from "@/lib/storage";
 import styles from "./page.module.css";
 
 function ReviewItem({ label, value }: { label: string; value: string }) {
@@ -19,6 +21,14 @@ function ReviewItem({ label, value }: { label: string; value: string }) {
     const parts = value.split(" ");
     return { first: parts[0] ?? "", last: parts.at(-1) ?? "", middle: "" };
   });
+  const isAddress = label === "Permanent Address";
+  const addressInputRef = useRef<HTMLInputElement>(null);
+
+  useAddressAutocomplete(
+    addressInputRef,
+    ({ city, state, street, zip }) => setDraftValue([street, city, [state, zip].filter(Boolean).join(" ")].filter(Boolean).join(", ")),
+    isAddress && isEditing,
+  );
 
   function closeEditor() {
     setIsClosing(true);
@@ -55,7 +65,7 @@ function ReviewItem({ label, value }: { label: string; value: string }) {
               <FloatingInput label="Last Name" name="lastName" onChange={(event) => setNameDraft((draft) => ({ ...draft, last: event.target.value }))} value={nameDraft.last} />
             </div>
           ) : (
-            <FloatingInput label={label} name={label.toLowerCase().replaceAll(/\W+/g, "-")} onChange={(event) => setDraftValue(event.target.value)} value={draftValue} />
+            <FloatingInput inputRef={isAddress ? addressInputRef : undefined} label={label} name={label.toLowerCase().replaceAll(/\W+/g, "-")} onChange={(event) => setDraftValue(event.target.value)} value={draftValue} />
           )}
         </div>
       </div>
@@ -81,24 +91,22 @@ function ReviewItem({ label, value }: { label: string; value: string }) {
 
 export default function Review() {
   const router = useRouter();
-  const [firstName] = useState(() => typeof window === "undefined" ? "John" : localStorage.getItem("in-school-loans-user-first-name") || "John");
-  const [lastName] = useState(() => typeof window === "undefined" ? "Doe" : localStorage.getItem("in-school-loans-user-last-name") || "Doe");
-  const [email] = useState(() => typeof window === "undefined" ? "" : localStorage.getItem("in-school-loans-user-email") || "");
-  const [cost] = useState(() => typeof window === "undefined" ? "$60,000" : `$${localStorage.getItem("in-school-loans-cost-of-attendance") || "60,000"}`);
-  const [aid] = useState(() => typeof window === "undefined" ? "$35,000" : `$${localStorage.getItem("in-school-loans-financial-aid") || "35,000"}`);
+  const { email, firstName, fullName } = useStoredUser();
+  const cost = `$${useStoredValue(storageKeys.costOfAttendance, "60,000")}`;
+  const aid = `$${useStoredValue(storageKeys.financialAid, "35,000")}`;
 
   return (
     <div className={styles.page}>
-      <TopNav title="In-School Loan" userName={`${firstName} ${lastName}`} />
+      <TopNav title="In-School Loan" userName={fullName} />
       <FlowProgress />
       <main className={styles.main}>
         <div className={styles.content}>
           <div className={styles.header}><Stepper currentStep={4} /><h1>{firstName}, let&apos;s review your information</h1></div>
-          <section className={styles.reviewList}>
+          <section className={styles.reviewList} key={`${fullName}-${email}-${cost}-${aid}`}>
             <ReviewItem label="Cost of Attendance" value={cost} />
             <ReviewItem label="Estimated Financial Aid" value={aid} />
             <ReviewItem label="Loan Amount" value="$25,000" />
-            <ReviewItem label="Name" value={`${firstName} ${lastName}`} />
+            <ReviewItem label="Name" value={fullName} />
             <ReviewItem label="Date of Birth" value="Not provided" />
             <ReviewItem label="Phone Number" value="Not provided" />
             <ReviewItem label="Permanent Address" value="Not provided" />

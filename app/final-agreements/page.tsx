@@ -1,41 +1,23 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { Badge } from "@/components/badge";
 import { Button } from "@/components/button";
 import { BackLink } from "@/components/link";
 import { TopNav } from "@/components/top-nav";
+import { useStoredUser } from "@/lib/storage";
 import styles from "./page.module.css";
-
-function AgreementsIllustration() {
-  return (
-    <svg aria-hidden="true" className={styles.illustration} fill="none" viewBox="0 0 180 180">
-      <path d="m43 35 77-14 20 113-77 14L43 35Z" fill="#fff" stroke="currentColor" strokeLinejoin="round" strokeWidth="4" />
-      <path d="M62 72h45M65 90h42m-38 18h42m-38 18h34" stroke="currentColor" strokeLinecap="round" strokeWidth="4" />
-      <circle cx="103" cy="58" r="18" stroke="currentColor" strokeWidth="4" />
-      <path d="m92 58 9 8 15-18" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="4" />
-      <path d="m127 55 27 7-12 61-27-7 12-61Z" fill="#fff" stroke="currentColor" strokeLinejoin="round" strokeWidth="4" />
-      <path d="m134 72 10 3m-13 10 10 3m-13 10 10 3m-13 10 10 3" stroke="currentColor" strokeLinecap="round" strokeWidth="4" />
-      <path d="m46 40 77-14" stroke="#20c6c2" strokeLinecap="round" strokeWidth="7" />
-    </svg>
-  );
-}
 
 export default function FinalAgreements() {
   const router = useRouter();
-  const [firstName, setFirstName] = useState("Marc");
-  const [lastName, setLastName] = useState("Schoonover");
+  const { fullName } = useStoredUser();
   const [acceptedTerms, setAcceptedTerms] = useState(false);
   const [acceptedCreditReport, setAcceptedCreditReport] = useState(false);
   const [activeAgreement, setActiveAgreement] = useState<"terms" | "credit-report" | null>(null);
   const canSubmit = acceptedTerms && acceptedCreditReport;
   const isTermsAgreement = activeAgreement === "terms";
-
-  useEffect(() => {
-    setFirstName(localStorage.getItem("in-school-loans-user-first-name") || "Marc");
-    setLastName(localStorage.getItem("in-school-loans-user-last-name") || "Schoonover");
-  }, []);
 
   function acceptAgreement() {
     if (isTermsAgreement) {
@@ -48,9 +30,9 @@ export default function FinalAgreements() {
 
   return (
     <div className={styles.page}>
-      <TopNav title="In-School Loan" userName={`${firstName} ${lastName}`} />
+      <TopNav title="In-School Loan" userName={fullName} />
       <main className={styles.main}>
-        <AgreementsIllustration />
+        <Image alt="" className={styles.illustration} height={180} priority src="/agreements.svg" width={180} />
         <h1>You&apos;re nearly finished!</h1>
         <p className={styles.description}>Please review the Terms and Conditions and provide your authorization to obtain the Credit Report so we can continue.</p>
         <section aria-label="Submission Acknowledgement" className={styles.acknowledgements}>

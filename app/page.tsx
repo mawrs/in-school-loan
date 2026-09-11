@@ -7,6 +7,7 @@ import { Button } from "@/components/button";
 import { FooterDisclaimer } from "@/components/footer-disclaimer";
 import { FloatingInput } from "@/components/floating-input";
 import { TopNav } from "@/components/top-nav";
+import { resetApplicationProgress, setStoredValue, storageKeys } from "@/lib/storage";
 import styles from "./page.module.css";
 
 const authImage = "/auth_cover.png";
@@ -21,9 +22,10 @@ export default function Home() {
     const lastName = String(formData.get("lastName") ?? "").trim();
     const email = String(formData.get("email") ?? "").trim();
 
-    localStorage.setItem("in-school-loans-user-first-name", firstName);
-    localStorage.setItem("in-school-loans-user-last-name", lastName);
-    localStorage.setItem("in-school-loans-user-email", email);
+    setStoredValue(storageKeys.firstName, firstName);
+    setStoredValue(storageKeys.lastName, lastName);
+    setStoredValue(storageKeys.email, email);
+    resetApplicationProgress();
     router.push("/dashboard");
   }
 
