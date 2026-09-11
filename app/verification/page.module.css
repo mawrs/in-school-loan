@@ -85,6 +85,10 @@
 }
 
 @media (max-width: 640px) {
+  .main {
+    padding-inline: var(--space-medium);
+  }
+
   .navActions {
     gap: var(--space-small);
   }

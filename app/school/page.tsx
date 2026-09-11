@@ -96,7 +96,6 @@ export default function School() {
 
   useEffect(() => {
     if (schoolName.trim().length < 2) {
-      setSchoolOptions([]);
       return;
     }
 
@@ -162,7 +161,10 @@ export default function School() {
             <Combobox
               label="School Name"
               name="schoolName"
-              onValueChange={setSchoolName}
+              onValueChange={(value) => {
+                setSchoolName(value);
+                if (value.trim().length < 2) setSchoolOptions([]);
+              }}
               options={schoolOptions}
               value={schoolName}
             />

@@ -26,20 +26,6 @@ const loanTypes = [
   },
 ];
 
-function ChevronDownIcon() {
-  return (
-    <svg aria-hidden="true" fill="none" viewBox="0 0 24 24">
-      <path
-        d="m6 9 6 6 6-6"
-        stroke="currentColor"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth="1.7"
-      />
-    </svg>
-  );
-}
-
 function BankIcon() {
   return (
     <svg aria-hidden="true" fill="none" viewBox="0 0 24 24">
@@ -51,7 +37,6 @@ function BankIcon() {
 
 export default function Dashboard() {
   const [isRequirementsOpen, setIsRequirementsOpen] = useState(false);
-  const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isSupportOpen, setIsSupportOpen] = useState(false);
   const [selectedLoan, setSelectedLoan] = useState<string | null>(null);
   const router = useRouter();
@@ -69,13 +54,6 @@ export default function Dashboard() {
     };
   });
   const fullName = [user.firstName, user.lastName].filter(Boolean).join(" ");
-
-  function signOut() {
-    localStorage.removeItem("in-school-loans-user-first-name");
-    localStorage.removeItem("in-school-loans-user-last-name");
-    localStorage.removeItem("in-school-loans-user-name");
-    router.push("/");
-  }
 
   return (
     <div className={styles.page}>

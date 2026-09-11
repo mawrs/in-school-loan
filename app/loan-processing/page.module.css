@@ -1,0 +1,83 @@
+.page {
+  background: var(--background-soft);
+  min-height: 100svh;
+}
+
+.main {
+  margin: 0 auto;
+  max-width: 688px;
+  padding: var(--space-xxl) 0;
+}
+
+.illustration {
+  color: var(--text-heading);
+  display: block;
+  height: 180px;
+  margin: 0 auto var(--space-large);
+  width: 180px;
+}
+
+.main h1 {
+  color: var(--text-heading);
+  font-size: var(--font-size-display-medium);
+  font-weight: var(--font-weight-medium);
+  line-height: 1.2;
+  text-align: center;
+}
+
+.description {
+  color: var(--text-body);
+  font-size: var(--font-size-base);
+  line-height: 1.4;
+  margin: var(--space-large) 0 0;
+}
+
+.loanDetails {
+  background: var(--background-white);
+  border: 1px solid var(--stroke-medium);
+  border-radius: var(--radius-extra-small);
+  display: grid;
+  gap: var(--space-medium);
+  grid-template-columns: repeat(2, 1fr);
+  margin-top: var(--space-large);
+  padding: var(--space-medium);
+}
+
+.loanDetails div {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-extra-small);
+}
+
+.loanDetails span {
+  color: var(--text-body);
+  font-size: var(--font-size-small);
+}
+
+.loanDetails strong {
+  color: var(--text-heading);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-medium);
+}
+
+.actions {
+  display: grid;
+  gap: var(--space-small);
+  grid-template-columns: repeat(2, 1fr);
+  margin-top: var(--space-xl);
+}
+
+@media (max-width: 720px) {
+  .main {
+    padding-inline: var(--space-medium);
+  }
+
+  .main h1 {
+    font-size: var(--font-size-h1);
+  }
+
+  .loanDetails,
+  .actions {
+    grid-template-columns: 1fr;
+  }
+}

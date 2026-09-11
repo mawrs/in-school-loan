@@ -9,14 +9,6 @@ import { Stepper } from "@/components/stepper";
 import { TopNav } from "@/components/top-nav";
 import styles from "./page.module.css";
 
-function ChevronDownIcon() {
-  return (
-    <svg aria-hidden="true" fill="none" viewBox="0 0 24 24">
-      <path d="m6 9 6 6 6-6" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.7" />
-    </svg>
-  );
-}
-
 function parseAmount(value: string | null, fallback: number) {
   const amount = Number(value?.replaceAll(",", ""));
   return Number.isFinite(amount) && amount > 0 ? amount : fallback;

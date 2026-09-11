@@ -3,7 +3,7 @@ import styles from "./badge.module.css";
 
 type BadgeProps = {
   children: ReactNode;
-  variant?: "default" | "success";
+  variant?: "default" | "success" | "warning";
 };
 
 export function Badge({ children, variant = "default" }: BadgeProps) {

@@ -1,0 +1,124 @@
+.page {
+  background: var(--background-soft);
+  min-height: 100svh;
+}
+
+.main {
+  margin: 0 auto;
+  max-width: 688px;
+  padding: var(--space-xxl) 0;
+}
+
+.illustration {
+  color: var(--text-heading);
+  display: block;
+  height: 180px;
+  margin: 0 auto var(--space-large);
+  width: 180px;
+}
+
+.main h1 {
+  color: var(--text-heading);
+  font-size: var(--font-size-display-medium);
+  font-weight: var(--font-weight-medium);
+  line-height: 1.2;
+  text-align: center;
+}
+
+.description {
+  color: var(--text-body);
+  font-size: var(--font-size-base);
+  line-height: 1.4;
+  margin: var(--space-large) 0 0;
+}
+
+.acknowledgements {
+  background: var(--background-white);
+  border: 1px solid var(--stroke-light);
+  border-radius: var(--radius-extra-small);
+  margin-top: var(--space-large);
+}
+
+.agreement {
+  align-items: center;
+  background: transparent;
+  border: 0;
+  color: var(--text-heading);
+  display: flex;
+  font-size: var(--font-size-base);
+  justify-content: space-between;
+  padding: var(--space-small) var(--space-medium);
+  text-align: left;
+  width: 100%;
+}
+
+.agreement + .agreement {
+  border-top: 1px solid var(--stroke-light);
+  gap: var(--space-medium);
+}
+
+.agreement:hover {
+  color: var(--text-brand);
+}
+
+.modalBackdrop {
+  align-items: center;
+  background: rgb(0 0 0 / 45%);
+  display: flex;
+  inset: 0;
+  justify-content: center;
+  padding: var(--space-large);
+  position: fixed;
+  z-index: 10;
+}
+
+.modal {
+  background: var(--background-white);
+  border: 1px solid var(--stroke-medium);
+  border-radius: var(--radius-small);
+  box-shadow: var(--shadow-small);
+  max-width: 760px;
+  width: 100%;
+}
+
+.modalContent {
+  color: var(--text-body);
+  font-size: var(--font-size-base);
+  line-height: 1.4;
+  max-height: min(560px, 65svh);
+  overflow-y: auto;
+  padding: var(--space-large);
+}
+
+.modalContent strong {
+  color: var(--text-heading);
+  display: block;
+  font-weight: var(--font-weight-medium);
+  margin-bottom: var(--space-medium);
+}
+
+.modalContent p {
+  margin: 0 0 var(--space-small);
+}
+
+.modalFooter {
+  border-top: 1px solid var(--stroke-light);
+  padding: var(--space-medium) var(--space-large);
+}
+
+.actions {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  margin-top: var(--space-xl);
+}
+
+@media (max-width: 720px) {
+  .main {
+    padding-inline: var(--space-medium);
+  }
+
+  .main h1 {
+    font-size: var(--font-size-h1);
+  }
+}
