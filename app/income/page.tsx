@@ -2,8 +2,8 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { AmountSlider } from "@/components/amount-slider";
 import { Button } from "@/components/button";
+import { CurrencyInput } from "@/components/currency-input";
 import { Dropdown } from "@/components/dropdown";
 import { FlowProgress } from "@/components/flow-progress";
 import { BackLink } from "@/components/link";
@@ -20,14 +20,10 @@ const employmentStatuses = [
   "Unemployed/Full Time Student",
 ];
 
-function formatAmount(value: number) {
-  return new Intl.NumberFormat("en-US", { currency: "USD", maximumFractionDigits: 0, style: "currency" }).format(value);
-}
-
 export default function Income() {
   const router = useRouter();
   const { fullName } = useStoredUser();
-  const [income, setIncome] = useState(38000);
+  const [income, setIncome] = useState("38,000");
 
   return (
     <div className={styles.page}>
@@ -48,14 +44,11 @@ export default function Income() {
               <p>Your estimated annual income is individual income, NOT household income. If you are unsure what your estimated annual income is, please look at your previous W-2 form.</p>
             </div>
           </div>
-          <AmountSlider
-            ariaLabel="Estimated annual income"
-            formatValue={formatAmount}
-            max={300000}
-            maxLabel="$300,000+"
-            min={0}
-            minLabel="$0"
-            onChange={setIncome}
+          <CurrencyInput
+            label="Estimated annual income"
+            name="estimatedAnnualIncome"
+            onValueChange={setIncome}
+            required
             value={income}
           />
           <div className={styles.employment}>

@@ -64,7 +64,7 @@ export default function Verification() {
             />
           </div>
           <div className={styles.actions}>
-            <BackLink href="/loan-eligibility" />
+            <BackLink href="/loan-info" />
             <Button size="base" type="submit">Next</Button>
           </div>
         </form>

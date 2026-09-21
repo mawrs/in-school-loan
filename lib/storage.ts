@@ -11,6 +11,7 @@ export const storageKeys = {
   email: "in-school-loans-user-email",
   employmentComplete: "in-school-loans-employment-complete",
   financialAid: "in-school-loans-financial-aid",
+  loanAmount: "in-school-loans-loan-amount",
   firstName: "in-school-loans-user-first-name",
   lastName: "in-school-loans-user-last-name",
 } as const;
@@ -58,6 +59,7 @@ export function resetApplicationProgress() {
     storageKeys.currentApplicationId,
     storageKeys.employmentComplete,
     storageKeys.financialAid,
+    storageKeys.loanAmount,
   );
   sessionStorage.removeItem("in-school-loans-progress-route");
 }

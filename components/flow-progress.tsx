@@ -5,7 +5,7 @@ import { useLayoutEffect, useRef, type CSSProperties } from "react";
 import styles from "./flow-progress.module.css";
 
 const progressByRoute: Record<string, number> = {
-  "/loan-info": 12.5,
+  "/loan-info": 25,
   "/loan-eligibility": 25,
   "/verification": 37.5,
   "/address": 50,

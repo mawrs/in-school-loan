@@ -57,6 +57,14 @@ const degreePrograms = {
   ],
 };
 
+const requestedPeriods = [
+  "Fall 2026/Spring 2027",
+  "Fall 2026",
+  "Spring 2027",
+  "Summer 2027",
+  "Other",
+];
+
 const gradeLevels = {
   "Undergraduate Degree": [
     "Undergraduate 1st year (Freshman)",
@@ -87,6 +95,7 @@ export default function School() {
   const router = useRouter();
   const { fullName } = useStoredUser();
   const [degreeLevel, setDegreeLevel] = useState("");
+  const [requestedPeriod, setRequestedPeriod] = useState("");
   const [schoolName, setSchoolName] = useState("");
   const [schoolOptions, setSchoolOptions] = useState<string[]>([]);
   const [isSearchingSchools, setIsSearchingSchools] = useState(false);
@@ -177,10 +186,19 @@ export default function School() {
               />
               <FloatingInput label="Actual/Expected Graduation Date" name="graduationDate" type="date" />
             </div>
-            <div className={styles.twoColumns}>
-              <FloatingInput label="Current Academic Year Start Date" name="academicStartDate" type="date" />
-              <FloatingInput label="Current Academic Year End Date" name="academicEndDate" type="date" />
-            </div>
+            <Dropdown
+              label="Requested Period"
+              name="requestedPeriod"
+              onValueChange={setRequestedPeriod}
+              options={requestedPeriods}
+              placeholder="Select Requested Period"
+            />
+            {requestedPeriod === "Other" ? (
+              <div className={styles.twoColumns}>
+                <FloatingInput label="Current Academic Year Start Date" name="academicStartDate" required type="date" />
+                <FloatingInput label="Current Academic Year End Date" name="academicEndDate" required type="date" />
+              </div>
+            ) : null}
             <div className={styles.enrollmentField}>
               <span>Enrollment Status</span>
               <Dropdown label="Enrollment Status" name="enrollmentStatus" options={["Full-time", "Half-time", "Less than half-time"]} placeholder="Please Select" />
