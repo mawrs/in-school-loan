@@ -4,6 +4,8 @@ import { useSyncExternalStore } from "react";
 
 export const storageKeys = {
   acknowledgementsAccepted: "in-school-loans-acknowledgements-accepted",
+  annualIncome: "in-school-loans-annual-income",
+  applicationDraft: "in-school-loans-application-draft",
   addressComplete: "in-school-loans-address-complete",
   applications: "in-school-loans-applications",
   costOfAttendance: "in-school-loans-cost-of-attendance",
@@ -25,6 +27,41 @@ export type StoredApplication = {
 };
 
 type StorageKey = (typeof storageKeys)[keyof typeof storageKeys];
+
+const emptyApplicationDraft = {
+  academicEndDate: "",
+  academicStartDate: "",
+  apartment: "",
+  citizenship: "",
+  city: "",
+  coSignerEmail: "",
+  coSignerFirstName: "",
+  coSignerLastName: "",
+  coSignerMiddleInitial: "",
+  coSignerRelationship: "",
+  dateOfBirth: "",
+  degreeLevel: "",
+  degreeType: "",
+  employmentStatus: "",
+  enrollmentStatus: "",
+  firstName: "",
+  gradeLevel: "",
+  graduationDate: "",
+  hasCoSigner: "",
+  housingExpense: "",
+  lastName: "",
+  livingArrangement: "",
+  middleInitial: "",
+  phone: "",
+  requestedPeriod: "",
+  schoolName: "",
+  ssn: "",
+  state: "",
+  street: "",
+  zip: "",
+};
+
+export type ApplicationDraft = { [Key in keyof typeof emptyApplicationDraft]: string };
 
 const changeEvent = "in-school-loans-storage";
 
@@ -54,6 +91,8 @@ export function removeStoredValues(...keys: StorageKey[]) {
 export function resetApplicationProgress() {
   removeStoredValues(
     storageKeys.acknowledgementsAccepted,
+    storageKeys.annualIncome,
+    storageKeys.applicationDraft,
     storageKeys.addressComplete,
     storageKeys.costOfAttendance,
     storageKeys.currentApplicationId,
@@ -107,6 +146,32 @@ export function markCurrentApplicationUnderReview() {
       ),
     ),
   );
+}
+
+export function readApplicationDraft(): ApplicationDraft {
+  const raw = readStoredValue(storageKeys.applicationDraft);
+  if (!raw) return { ...emptyApplicationDraft };
+
+  try {
+    return { ...emptyApplicationDraft, ...(JSON.parse(raw) as Partial<ApplicationDraft>) };
+  } catch {
+    return { ...emptyApplicationDraft };
+  }
+}
+
+export function updateApplicationDraft(patch: Partial<ApplicationDraft>) {
+  setStoredValue(storageKeys.applicationDraft, JSON.stringify({ ...readApplicationDraft(), ...patch }));
+}
+
+export function useApplicationDraft() {
+  const raw = useStoredValue(storageKeys.applicationDraft, "");
+  if (!raw) return { ...emptyApplicationDraft };
+
+  try {
+    return { ...emptyApplicationDraft, ...(JSON.parse(raw) as Partial<ApplicationDraft>) };
+  } catch {
+    return { ...emptyApplicationDraft };
+  }
 }
 
 export function useStoredApplications() {

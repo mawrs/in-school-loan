@@ -9,7 +9,7 @@ import { FloatingInput } from "@/components/floating-input";
 import { BackLink, Link } from "@/components/link";
 import { TopNav } from "@/components/top-nav";
 import { emptyAddress, useAddressAutocomplete, type ParsedAddress } from "@/lib/google-maps";
-import { setStoredValue, storageKeys, useStoredUser } from "@/lib/storage";
+import { setStoredValue, storageKeys, useApplicationDraft, useStoredUser, useStoredValue } from "@/lib/storage";
 import styles from "./page.module.css";
 
 const occupations = [
@@ -94,6 +94,9 @@ function CompanyAddressFields({
 export default function EmploymentDetails() {
   const router = useRouter();
   const { fullName } = useStoredUser();
+  const annualIncome = useStoredValue(storageKeys.annualIncome);
+  const employmentStatus = useApplicationDraft().employmentStatus;
+  const formattedIncome = annualIncome ? `$${annualIncome}` : "Not provided";
   const [occupation, setOccupation] = useState("");
   const [previousOccupation, setPreviousOccupation] = useState("");
   const [years, setYears] = useState("");
@@ -117,8 +120,8 @@ export default function EmploymentDetails() {
         <h1>Tell us a little more about your<br />income source</h1>
         <p className={styles.subtitle}>Please fill in the additional information required for your employment history.</p>
         <section className={styles.summary}>
-          <div><span>Estimated Annual Income</span><strong>$38,000</strong></div>
-          <div><span>Employment Status</span><strong>Employed</strong></div>
+          <div><span>Estimated Annual Income</span><strong>{formattedIncome}</strong></div>
+          <div><span>Employment Status</span><strong>{employmentStatus || "Not provided"}</strong></div>
           <div className={styles.addIncomeRow}>
             <Link className={styles.addIncome} onClick={() => setHasAdditionalIncome(true)}><span>+</span>I have another source of income</Link>
           </div>
@@ -144,7 +147,7 @@ export default function EmploymentDetails() {
           ) : null}
           <div className={styles.total}>
             <span>Total Annual Income:</span>
-            <strong>$38,000.00</strong>
+            <strong>{formattedIncome}</strong>
           </div>
         </section>
         <form className={styles.form} onSubmit={confirmChanges}>

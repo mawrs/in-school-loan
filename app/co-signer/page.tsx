@@ -1,19 +1,28 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/button";
 import { FlowProgress } from "@/components/flow-progress";
 import { BackLink } from "@/components/link";
 import { Stepper } from "@/components/stepper";
 import { TopNav } from "@/components/top-nav";
-import { useStoredUser } from "@/lib/storage";
+import { readApplicationDraft, updateApplicationDraft, useStoredUser } from "@/lib/storage";
 import styles from "./page.module.css";
 
 export default function CoSigner() {
   const router = useRouter();
   const { fullName } = useStoredUser();
   const [hasCoSigner, setHasCoSigner] = useState(false);
+
+  useEffect(() => {
+    setHasCoSigner(readApplicationDraft().hasCoSigner === "true");
+  }, []);
+
+  function chooseCoSigner(value: boolean) {
+    setHasCoSigner(value);
+    updateApplicationDraft({ hasCoSigner: String(value) });
+  }
 
   return (
     <div className={styles.page}>
@@ -36,11 +45,11 @@ export default function CoSigner() {
           </div>
           <fieldset className={styles.options}>
             <label className={hasCoSigner ? styles.selected : ""}>
-              <input checked={hasCoSigner} name="coSigner" onChange={() => setHasCoSigner(true)} type="radio" />
+              <input checked={hasCoSigner} name="coSigner" onChange={() => chooseCoSigner(true)} type="radio" />
               Yes
             </label>
             <label className={!hasCoSigner ? styles.selected : ""}>
-              <input checked={!hasCoSigner} name="coSigner" onChange={() => setHasCoSigner(false)} type="radio" />
+              <input checked={!hasCoSigner} name="coSigner" onChange={() => chooseCoSigner(false)} type="radio" />
               No
             </label>
           </fieldset>

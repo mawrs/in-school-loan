@@ -10,7 +10,7 @@ import { BackLink } from "@/components/link";
 import { Stepper } from "@/components/stepper";
 import { TopNav } from "@/components/top-nav";
 import { useAddressAutocomplete } from "@/lib/google-maps";
-import { storageKeys, useStoredUser, useStoredValue } from "@/lib/storage";
+import { storageKeys, useApplicationDraft, useStoredUser, useStoredValue } from "@/lib/storage";
 import styles from "./page.module.css";
 
 const currencyLabels = new Set([
@@ -166,10 +166,18 @@ function ReviewSection({ rows, title }: { rows: { label: string; value: string }
 
 export default function Review() {
   const router = useRouter();
-  const { email, firstName, fullName } = useStoredUser();
+  const { email, firstName, fullName, lastName } = useStoredUser();
   const cost = `$${useStoredValue(storageKeys.costOfAttendance, "60,000")}`;
   const aid = `$${useStoredValue(storageKeys.financialAid, "35,000")}`;
   const loan = `$${useStoredValue(storageKeys.loanAmount, "25,000")}`;
+  const annualIncome = useStoredValue(storageKeys.annualIncome);
+  const draft = useApplicationDraft();
+  const provided = (value: string) => value || "Not provided";
+  const applicantName = [draft.firstName || firstName, draft.middleInitial, draft.lastName || lastName].filter(Boolean).join(" ");
+  const coSignerName = [draft.coSignerFirstName, draft.coSignerMiddleInitial, draft.coSignerLastName].filter(Boolean).join(" ");
+  const address = [draft.street, draft.apartment, [draft.city, [draft.state, draft.zip].filter(Boolean).join(" ")].filter(Boolean).join(", ")]
+    .filter(Boolean)
+    .join(", ");
   const sections = [
     {
       title: "Loan info",
@@ -182,43 +190,43 @@ export default function Review() {
     {
       title: "About you",
       rows: [
-        { label: "Name", value: fullName },
+        { label: "Name", value: applicantName || fullName },
         { label: "Email", value: email || "Not provided" },
-        { label: "Date of Birth", value: "Not provided" },
-        { label: "Phone Number", value: "Not provided" },
-        { label: "Permanent Address", value: "Not provided" },
-        { label: "Social Security Number (SSN)", value: "•••-••-••••" },
-        { label: "Citizenship Status", value: "U.S Citizen" },
+        { label: "Date of Birth", value: provided(draft.dateOfBirth) },
+        { label: "Phone Number", value: provided(draft.phone) },
+        { label: "Permanent Address", value: provided(address) },
+        { label: "Social Security Number (SSN)", value: draft.ssn ? "•••-••-••••" : "Not provided" },
+        { label: "Citizenship Status", value: draft.citizenship === "resident" ? "Permanent Resident" : draft.citizenship === "citizen" ? "U.S Citizen" : "Not provided" },
       ],
     },
     {
       title: "Living arrangement",
       rows: [
-        { label: "Living Arrangement", value: "Not provided" },
-        { label: "Housing Expense (Monthly)", value: "Not provided" },
+        { label: "Living Arrangement", value: provided(draft.livingArrangement) },
+        { label: "Housing Expense (Monthly)", value: draft.housingExpense ? `$${draft.housingExpense}` : "Not provided" },
       ],
     },
     {
       title: "Education",
       rows: [
-        { label: "School Name", value: "Not provided" },
-        { label: "Degree Level", value: "Not provided" },
-        { label: "Type of Degree", value: "Not provided" },
-        { label: "Grade Level", value: "Not provided" },
-        { label: "Graduation Date", value: "Not provided" },
-        { label: "Requested Period", value: "Not provided" },
-        { label: "Enrollment Status", value: "Not provided" },
+        { label: "School Name", value: provided(draft.schoolName) },
+        { label: "Degree Level", value: provided(draft.degreeLevel) },
+        { label: "Type of Degree", value: provided(draft.degreeType) },
+        { label: "Grade Level", value: provided(draft.gradeLevel) },
+        { label: "Graduation Date", value: provided(draft.graduationDate) },
+        { label: "Requested Period", value: provided(draft.requestedPeriod) },
+        { label: "Enrollment Status", value: provided(draft.enrollmentStatus) },
       ],
     },
     {
       title: "Financial",
       rows: [
-        { label: "Estimated Annual Income", value: "$38,000" },
-        { label: "Employment Status", value: "Not provided" },
-        { label: "Co-signer", value: "Not provided" },
-        { label: "Co-signer Name", value: "Not provided" },
-        { label: "Co-signer Email", value: email || "Not provided" },
-        { label: "Co-signer Relationship", value: "Not provided" },
+        { label: "Estimated Annual Income", value: annualIncome ? `$${annualIncome}` : "Not provided" },
+        { label: "Employment Status", value: provided(draft.employmentStatus) },
+        { label: "Co-signer", value: draft.hasCoSigner === "true" ? "Yes" : draft.hasCoSigner === "false" ? "No" : "Not provided" },
+        { label: "Co-signer Name", value: provided(coSignerName) },
+        { label: "Co-signer Email", value: provided(draft.coSignerEmail) },
+        { label: "Co-signer Relationship", value: provided(draft.coSignerRelationship) },
       ],
     },
   ];
@@ -233,7 +241,7 @@ export default function Review() {
             <Stepper currentStep={4} />
             <h1>{firstName}, let&apos;s review your information</h1>
           </div>
-          <div className={styles.sections} key={`${fullName}-${email}-${cost}-${aid}-${loan}`}>
+          <div className={styles.sections} key={`${fullName}-${email}-${cost}-${aid}-${loan}-${annualIncome}-${JSON.stringify(draft)}`}>
             {sections.map((section) => (
               <ReviewSection key={section.title} {...section} />
             ))}

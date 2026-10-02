@@ -10,7 +10,7 @@ import { FlowProgress } from "@/components/flow-progress";
 import { BackLink } from "@/components/link";
 import { Stepper } from "@/components/stepper";
 import { TopNav } from "@/components/top-nav";
-import { useStoredUser } from "@/lib/storage";
+import { readApplicationDraft, updateApplicationDraft, useStoredUser } from "@/lib/storage";
 import styles from "./page.module.css";
 
 const degreePrograms = {
@@ -95,10 +95,29 @@ export default function School() {
   const router = useRouter();
   const { fullName } = useStoredUser();
   const [degreeLevel, setDegreeLevel] = useState("");
+  const [degreeType, setDegreeType] = useState("");
   const [requestedPeriod, setRequestedPeriod] = useState("");
   const [schoolName, setSchoolName] = useState("");
+  const [gradeLevel, setGradeLevel] = useState("");
+  const [graduationDate, setGraduationDate] = useState("");
+  const [academicStartDate, setAcademicStartDate] = useState("");
+  const [academicEndDate, setAcademicEndDate] = useState("");
+  const [enrollmentStatus, setEnrollmentStatus] = useState("");
   const [schoolOptions, setSchoolOptions] = useState<string[]>([]);
   const [isSearchingSchools, setIsSearchingSchools] = useState(false);
+
+  useEffect(() => {
+    const draft = readApplicationDraft();
+    setDegreeLevel(draft.degreeLevel);
+    setDegreeType(draft.degreeType);
+    setRequestedPeriod(draft.requestedPeriod);
+    setSchoolName(draft.schoolName);
+    setGradeLevel(draft.gradeLevel);
+    setGraduationDate(draft.graduationDate);
+    setAcademicStartDate(draft.academicStartDate);
+    setAcademicEndDate(draft.academicEndDate);
+    setEnrollmentStatus(draft.enrollmentStatus);
+  }, []);
 
   useEffect(() => {
     if (schoolName.trim().length < 1) {
@@ -149,16 +168,27 @@ export default function School() {
               <Dropdown
                 label="Degree Level"
                 name="degreeLevel"
-                onValueChange={setDegreeLevel}
+                onValueChange={(value) => {
+                  setDegreeLevel(value);
+                  setDegreeType("");
+                  setGradeLevel("");
+                  updateApplicationDraft({ degreeLevel: value, degreeType: "", gradeLevel: "" });
+                }}
                 options={Object.keys(degreePrograms)}
                 placeholder="Select Degree Level"
+                value={degreeLevel}
               />
               <Dropdown
                 key={degreeLevel}
                 label="Type of Degree"
                 name="degreeType"
+                onValueChange={(value) => {
+                  setDegreeType(value);
+                  updateApplicationDraft({ degreeType: value });
+                }}
                 options={degreeLevel ? degreePrograms[degreeLevel as keyof typeof degreePrograms] : []}
                 placeholder={degreeLevel ? `Type of ${degreeLevel}` : "Type of Degree"}
+                value={degreeType}
               />
             </div>
             <Combobox
@@ -169,6 +199,7 @@ export default function School() {
               name="schoolName"
               onValueChange={(value) => {
                 setSchoolName(value);
+                updateApplicationDraft({ schoolName: value });
                 if (schoolOptions.includes(value)) return;
                 setSchoolOptions([]);
                 setIsSearchingSchools(value.trim().length >= 1);
@@ -181,27 +212,75 @@ export default function School() {
                 key={degreeLevel}
                 label="Grade Level"
                 name="gradeLevel"
+                onValueChange={(value) => {
+                  setGradeLevel(value);
+                  updateApplicationDraft({ gradeLevel: value });
+                }}
                 options={degreeLevel ? gradeLevels[degreeLevel as keyof typeof gradeLevels] : []}
                 placeholder="Select Grade Level"
+                value={gradeLevel}
               />
-              <FloatingInput label="Actual/Expected Graduation Date" name="graduationDate" type="date" />
+              <FloatingInput
+                label="Actual/Expected Graduation Date"
+                name="graduationDate"
+                onChange={(event) => {
+                  setGraduationDate(event.target.value);
+                  updateApplicationDraft({ graduationDate: event.target.value });
+                }}
+                type="date"
+                value={graduationDate}
+              />
             </div>
             <Dropdown
               label="Requested Period"
               name="requestedPeriod"
-              onValueChange={setRequestedPeriod}
+              onValueChange={(value) => {
+                setRequestedPeriod(value);
+                updateApplicationDraft({ requestedPeriod: value });
+              }}
               options={requestedPeriods}
               placeholder="Select Requested Period"
+              value={requestedPeriod}
             />
             {requestedPeriod === "Other" ? (
               <div className={styles.twoColumns}>
-                <FloatingInput label="Current Academic Year Start Date" name="academicStartDate" required type="date" />
-                <FloatingInput label="Current Academic Year End Date" name="academicEndDate" required type="date" />
+                <FloatingInput
+                  label="Current Academic Year Start Date"
+                  name="academicStartDate"
+                  onChange={(event) => {
+                    setAcademicStartDate(event.target.value);
+                    updateApplicationDraft({ academicStartDate: event.target.value });
+                  }}
+                  required
+                  type="date"
+                  value={academicStartDate}
+                />
+                <FloatingInput
+                  label="Current Academic Year End Date"
+                  name="academicEndDate"
+                  onChange={(event) => {
+                    setAcademicEndDate(event.target.value);
+                    updateApplicationDraft({ academicEndDate: event.target.value });
+                  }}
+                  required
+                  type="date"
+                  value={academicEndDate}
+                />
               </div>
             ) : null}
             <div className={styles.enrollmentField}>
               <span>Enrollment Status</span>
-              <Dropdown label="Enrollment Status" name="enrollmentStatus" options={["Full-time", "Half-time", "Less than half-time"]} placeholder="Please Select" />
+              <Dropdown
+                label="Enrollment Status"
+                name="enrollmentStatus"
+                onValueChange={(value) => {
+                  setEnrollmentStatus(value);
+                  updateApplicationDraft({ enrollmentStatus: value });
+                }}
+                options={["Full-time", "Half-time", "Less than half-time"]}
+                placeholder="Please Select"
+                value={enrollmentStatus}
+              />
             </div>
           </div>
           <div className={styles.actions}>

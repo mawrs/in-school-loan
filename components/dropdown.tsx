@@ -9,6 +9,7 @@ type DropdownProps = {
   onValueChange?: (value: string) => void;
   options: string[];
   placeholder: string;
+  value?: string;
 };
 
 function ChevronDownIcon() {
@@ -19,9 +20,10 @@ function ChevronDownIcon() {
   );
 }
 
-export function Dropdown({ label, name, onValueChange, options, placeholder }: DropdownProps) {
+export function Dropdown({ label, name, onValueChange, options, placeholder, value }: DropdownProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const [value, setValue] = useState("");
+  const [uncontrolledValue, setUncontrolledValue] = useState("");
+  const selectedValue = value ?? uncontrolledValue;
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -37,7 +39,7 @@ export function Dropdown({ label, name, onValueChange, options, placeholder }: D
 
   return (
     <div className={styles.dropdown} ref={dropdownRef}>
-      <input name={name} type="hidden" value={value} />
+      <input name={name} type="hidden" value={selectedValue} />
       <button
         aria-expanded={isOpen}
         aria-haspopup="listbox"
@@ -46,21 +48,21 @@ export function Dropdown({ label, name, onValueChange, options, placeholder }: D
         onClick={() => setIsOpen((open) => !open)}
         type="button"
       >
-        {value ? <span className={styles.value}>{value}</span> : null}
+        {selectedValue ? <span className={styles.value}>{selectedValue}</span> : null}
         <ChevronDownIcon />
       </button>
-      <span className={value ? `${styles.label} ${styles.floatingLabel}` : styles.label}>
-        {value ? label : placeholder}
+      <span className={selectedValue ? `${styles.label} ${styles.floatingLabel}` : styles.label}>
+        {selectedValue ? label : placeholder}
       </span>
       {isOpen ? (
         <div className={styles.menu} role="listbox">
           {options.map((option) => (
             <button
-              aria-selected={option === value}
-              className={option === value ? styles.selected : undefined}
+              aria-selected={option === selectedValue}
+              className={option === selectedValue ? styles.selected : undefined}
               key={option}
               onClick={() => {
-                setValue(option);
+                if (value === undefined) setUncontrolledValue(option);
                 onValueChange?.(option);
                 setIsOpen(false);
               }}
@@ -68,7 +70,7 @@ export function Dropdown({ label, name, onValueChange, options, placeholder }: D
               type="button"
             >
               {option}
-              {option === value ? <span aria-hidden="true">✓</span> : null}
+              {option === selectedValue ? <span aria-hidden="true">✓</span> : null}
             </button>
           ))}
         </div>

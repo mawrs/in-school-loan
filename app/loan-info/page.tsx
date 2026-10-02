@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/button";
 import { CurrencyInput } from "@/components/currency-input";
 import { FlowProgress } from "@/components/flow-progress";
-import { BackLink } from "@/components/link";
 import { Stepper } from "@/components/stepper";
 import { TopNav } from "@/components/top-nav";
 import { readStoredValue, setStoredValue, storageKeys, useStoredUser } from "@/lib/storage";
@@ -182,7 +181,10 @@ export default function LoanInfo() {
             error={loanAmountError}
             label="Loan amount"
             name="loanAmount"
-            onValueChange={setLoanAmount}
+            onValueChange={(value) => {
+              setLoanAmount(value);
+              setStoredValue(storageKeys.loanAmount, value);
+            }}
             required
             value={loanAmount}
           />
@@ -194,7 +196,10 @@ export default function LoanInfo() {
                   id="cost-of-attendance"
                   label="Estimated cost of attendance"
                   name="costOfAttendance"
-                  onValueChange={setCostOfAttendance}
+                  onValueChange={(value) => {
+                    setCostOfAttendance(value);
+                    setStoredValue(storageKeys.costOfAttendance, value);
+                  }}
                   required
                   value={costOfAttendance}
                 />
@@ -208,7 +213,10 @@ export default function LoanInfo() {
                   id="estimated-financial-aid"
                   label="Estimated financial aid"
                   name="estimatedFinancialAid"
-                  onValueChange={setEstimatedFinancialAid}
+                  onValueChange={(value) => {
+                    setEstimatedFinancialAid(value);
+                    setStoredValue(storageKeys.financialAid, value);
+                  }}
                   required
                   value={estimatedFinancialAid}
                 />
@@ -229,7 +237,6 @@ export default function LoanInfo() {
             <p>This is an estimate only. Your school will confirm your final eligible loan amount.</p>
           </output>
           <div className={styles.actions}>
-            <BackLink href="/dashboard" />
             <Button size="base" type="submit">
               Next
             </Button>

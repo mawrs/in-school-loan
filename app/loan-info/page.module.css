@@ -241,7 +241,7 @@
 .actions {
   align-items: center;
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   margin-top: var(--space-xl);
 }
 

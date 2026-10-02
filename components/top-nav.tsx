@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useEffect, useRef, useState, type ReactNode } from "react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { clearStoredApplications, removeStoredValues, resetApplicationProgress, storageKeys } from "@/lib/storage";
 import { Button } from "./button";
 import styles from "./top-nav.module.css";
@@ -26,22 +26,86 @@ export function TopNav({
   userName,
   onSupport,
 }: TopNavProps) {
+  const router = useRouter();
+  const pathname = usePathname();
+  const [isConfirmOpen, setIsConfirmOpen] = useState(false);
+  const dialogRef = useRef<HTMLElement>(null);
+  const canReturnToDashboard = Boolean(userName) && pathname !== "/dashboard";
+
+  useEffect(() => {
+    if (!isConfirmOpen) return;
+
+    dialogRef.current?.focus();
+
+    function closeOnEscape(event: KeyboardEvent) {
+      if (event.key === "Escape") setIsConfirmOpen(false);
+    }
+
+    document.addEventListener("keydown", closeOnEscape);
+    return () => document.removeEventListener("keydown", closeOnEscape);
+  }, [isConfirmOpen]);
+
   return (
-    <header className={styles.nav}>
-      <div className={styles.brand}>
-        <Image
-          alt={logoAlt}
-          className={styles.logo}
-          height={74}
-          priority
-          src={logoSrc}
-          unoptimized
-          width={111}
-        />
-        <span className={styles.title}>{title}</span>
-      </div>
-      {action ?? (userName ? <AccountActions onSupport={onSupport} userName={userName} /> : <Button size="base">Log In</Button>)}
-    </header>
+    <>
+      <header className={styles.nav}>
+        <div className={styles.brand}>
+          {canReturnToDashboard ? (
+            <button aria-label={logoAlt} className={styles.logoButton} onClick={() => setIsConfirmOpen(true)} type="button">
+              <Image
+                alt={logoAlt}
+                className={styles.logo}
+                height={74}
+                priority
+                src={logoSrc}
+                unoptimized
+                width={111}
+              />
+            </button>
+          ) : (
+            <Image
+              alt={logoAlt}
+              className={styles.logo}
+              height={74}
+              priority
+              src={logoSrc}
+              unoptimized
+              width={111}
+            />
+          )}
+          <span className={styles.title}>{title}</span>
+        </div>
+        {action ?? (userName ? <AccountActions onSupport={onSupport} userName={userName} /> : <Button size="base">Log In</Button>)}
+      </header>
+      {isConfirmOpen ? (
+        <div
+          className={styles.dialogBackdrop}
+          onClick={(event) => {
+            if (event.target === event.currentTarget) setIsConfirmOpen(false);
+          }}
+          role="presentation"
+        >
+          <section
+            aria-labelledby="dashboard-redirect-title"
+            aria-modal="true"
+            className={styles.dialog}
+            ref={dialogRef}
+            role="dialog"
+            tabIndex={-1}
+          >
+            <h2 id="dashboard-redirect-title">Redirecting to dashboard</h2>
+            <p>Your progress will be saved.</p>
+            <div className={styles.dialogActions}>
+              <Button onClick={() => setIsConfirmOpen(false)} size="base" variant="outline">
+                Cancel
+              </Button>
+              <Button onClick={() => router.push("/dashboard")} size="base">
+                Go to dashboard
+              </Button>
+            </div>
+          </section>
+        </div>
+      ) : null}
+    </>
   );
 }
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/button";
 import { FloatingInput } from "@/components/floating-input";
@@ -8,13 +8,22 @@ import { FlowProgress } from "@/components/flow-progress";
 import { BackLink } from "@/components/link";
 import { Stepper } from "@/components/stepper";
 import { TopNav } from "@/components/top-nav";
-import { useStoredUser } from "@/lib/storage";
+import { readApplicationDraft, updateApplicationDraft, useStoredUser } from "@/lib/storage";
 import styles from "./page.module.css";
 
 export default function Identity() {
   const router = useRouter();
   const { fullName } = useStoredUser();
+  const [ssn, setSsn] = useState("");
+  const [dateOfBirth, setDateOfBirth] = useState("");
   const [citizenship, setCitizenship] = useState("citizen");
+
+  useEffect(() => {
+    const draft = readApplicationDraft();
+    setSsn(draft.ssn);
+    setDateOfBirth(draft.dateOfBirth);
+    if (draft.citizenship) setCitizenship(draft.citizenship);
+  }, []);
 
   return (
     <div className={styles.page}>
@@ -37,17 +46,52 @@ export default function Identity() {
           </div>
           <div className={styles.fields}>
             <div className={styles.identityFields}>
-              <FloatingInput autoComplete="off" label="Social Security Number" name="ssn" type="password" />
-              <FloatingInput label="Date of Birth" name="dateOfBirth" type="date" />
+              <FloatingInput
+                autoComplete="off"
+                label="Social Security Number"
+                name="ssn"
+                onChange={(event) => {
+                  setSsn(event.target.value);
+                  updateApplicationDraft({ ssn: event.target.value });
+                }}
+                type="password"
+                value={ssn}
+              />
+              <FloatingInput
+                label="Date of Birth"
+                name="dateOfBirth"
+                onChange={(event) => {
+                  setDateOfBirth(event.target.value);
+                  updateApplicationDraft({ dateOfBirth: event.target.value });
+                }}
+                type="date"
+                value={dateOfBirth}
+              />
             </div>
             <fieldset className={styles.citizenship}>
               <legend>Citizenship Status</legend>
               <label className={citizenship === "citizen" ? styles.selected : ""}>
-                <input checked={citizenship === "citizen"} name="citizenship" onChange={() => setCitizenship("citizen")} type="radio" />
+                <input
+                  checked={citizenship === "citizen"}
+                  name="citizenship"
+                  onChange={() => {
+                    setCitizenship("citizen");
+                    updateApplicationDraft({ citizenship: "citizen" });
+                  }}
+                  type="radio"
+                />
                 U.S Citizen
               </label>
               <label className={citizenship === "resident" ? styles.selected : ""}>
-                <input checked={citizenship === "resident"} name="citizenship" onChange={() => setCitizenship("resident")} type="radio" />
+                <input
+                  checked={citizenship === "resident"}
+                  name="citizenship"
+                  onChange={() => {
+                    setCitizenship("resident");
+                    updateApplicationDraft({ citizenship: "resident" });
+                  }}
+                  type="radio"
+                />
                 Permanent Resident
               </label>
             </fieldset>

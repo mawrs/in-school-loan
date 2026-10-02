@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/button";
 import { CurrencyInput } from "@/components/currency-input";
@@ -9,7 +9,7 @@ import { FlowProgress } from "@/components/flow-progress";
 import { BackLink } from "@/components/link";
 import { Stepper } from "@/components/stepper";
 import { TopNav } from "@/components/top-nav";
-import { useStoredUser } from "@/lib/storage";
+import { readApplicationDraft, readStoredValue, setStoredValue, storageKeys, updateApplicationDraft, useStoredUser } from "@/lib/storage";
 import styles from "./page.module.css";
 
 const employmentStatuses = [
@@ -23,7 +23,13 @@ const employmentStatuses = [
 export default function Income() {
   const router = useRouter();
   const { fullName } = useStoredUser();
-  const [income, setIncome] = useState("38,000");
+  const [income, setIncome] = useState("");
+  const [employmentStatus, setEmploymentStatus] = useState("");
+
+  useEffect(() => {
+    setIncome(readStoredValue(storageKeys.annualIncome) ?? "");
+    setEmploymentStatus(readApplicationDraft().employmentStatus);
+  }, []);
 
   return (
     <div className={styles.page}>
@@ -34,6 +40,7 @@ export default function Income() {
           className={styles.form}
           onSubmit={(event) => {
             event.preventDefault();
+            setStoredValue(storageKeys.annualIncome, income);
             router.push("/review");
           }}
         >
@@ -47,13 +54,26 @@ export default function Income() {
           <CurrencyInput
             label="Estimated annual income"
             name="estimatedAnnualIncome"
-            onValueChange={setIncome}
+            onValueChange={(value) => {
+              setIncome(value);
+              setStoredValue(storageKeys.annualIncome, value);
+            }}
             required
             value={income}
           />
           <div className={styles.employment}>
             <span>What&apos;s your employment status?</span>
-            <Dropdown label="Employment Status" name="employmentStatus" options={employmentStatuses} placeholder="Please Select" />
+            <Dropdown
+              label="Employment Status"
+              name="employmentStatus"
+              onValueChange={(value) => {
+                setEmploymentStatus(value);
+                updateApplicationDraft({ employmentStatus: value });
+              }}
+              options={employmentStatuses}
+              placeholder="Please Select"
+              value={employmentStatus}
+            />
           </div>
           <div className={styles.actions}>
             <BackLink href="/co-signer" />
