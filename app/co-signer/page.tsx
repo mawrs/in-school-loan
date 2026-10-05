@@ -33,6 +33,7 @@ export default function CoSigner() {
           className={styles.form}
           onSubmit={(event) => {
             event.preventDefault();
+            updateApplicationDraft({ hasCoSigner: String(hasCoSigner) });
             router.push(hasCoSigner ? "/co-signer-details" : "/income");
           }}
         >

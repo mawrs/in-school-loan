@@ -166,16 +166,15 @@
   margin: 0;
 }
 
-.addIncomeRow {
-  align-items: center;
-  display: flex !important;
-}
-
 .addIncome {
+  align-self: center;
   background: transparent;
   border: 0;
   color: var(--text-body);
   font-size: var(--font-size-small);
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  justify-self: end;
   padding: 0;
 }
 
@@ -210,8 +209,14 @@
 }
 
 .total {
-  gap: var(--space-small);
+  column-gap: var(--space-medium);
+  grid-template-columns: 1fr auto;
   text-align: left;
+}
+
+.total span,
+.total strong {
+  grid-column: 1;
 }
 
 .total span {

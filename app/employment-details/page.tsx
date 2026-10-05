@@ -122,9 +122,6 @@ export default function EmploymentDetails() {
         <section className={styles.summary}>
           <div><span>Estimated Annual Income</span><strong>{formattedIncome}</strong></div>
           <div><span>Employment Status</span><strong>{employmentStatus || "Not provided"}</strong></div>
-          <div className={styles.addIncomeRow}>
-            <Link className={styles.addIncome} onClick={() => setHasAdditionalIncome(true)}><span>+</span>I have another source of income</Link>
-          </div>
           {hasAdditionalIncome ? (
             <div className={styles.additionalIncome}>
               <Combobox label="Additional Income Source" name="additional-income-source" onValueChange={setAdditionalIncomeSource} options={additionalIncomeSources} value={additionalIncomeSource} />
@@ -148,6 +145,7 @@ export default function EmploymentDetails() {
           <div className={styles.total}>
             <span>Total Annual Income:</span>
             <strong>{formattedIncome}</strong>
+            <Link className={styles.addIncome} onClick={() => setHasAdditionalIncome(true)}><span>+</span>I have another source of income</Link>
           </div>
         </section>
         <form className={styles.form} onSubmit={confirmChanges}>

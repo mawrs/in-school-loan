@@ -20,16 +20,33 @@ const employmentStatuses = [
   "Unemployed/Full Time Student",
 ];
 
+const minimumIncomeWithoutCoSigner = 35000;
+
+function parseIncome(value: string) {
+  const amount = Number(value.replaceAll(",", ""));
+  return Number.isFinite(amount) ? amount : Number.NaN;
+}
+
 export default function Income() {
   const router = useRouter();
   const { fullName } = useStoredUser();
   const [income, setIncome] = useState("");
+  const [incomeBlurred, setIncomeBlurred] = useState(false);
   const [employmentStatus, setEmploymentStatus] = useState("");
+  const [declinedCoSigner, setDeclinedCoSigner] = useState(false);
 
   useEffect(() => {
+    const draft = readApplicationDraft();
     setIncome(readStoredValue(storageKeys.annualIncome) ?? "");
-    setEmploymentStatus(readApplicationDraft().employmentStatus);
+    setEmploymentStatus(draft.employmentStatus);
+    setDeclinedCoSigner(draft.hasCoSigner !== "true");
   }, []);
+
+  const incomeIsTooLow =
+    declinedCoSigner && income !== "" && parseIncome(income) < minimumIncomeWithoutCoSigner;
+  const incomeError = incomeBlurred && incomeIsTooLow
+    ? "Your income is too low and requires a co-signer."
+    : undefined;
 
   return (
     <div className={styles.page}>
@@ -40,6 +57,10 @@ export default function Income() {
           className={styles.form}
           onSubmit={(event) => {
             event.preventDefault();
+            if (incomeIsTooLow) {
+              setIncomeBlurred(true);
+              return;
+            }
             setStoredValue(storageKeys.annualIncome, income);
             router.push("/review");
           }}
@@ -52,8 +73,11 @@ export default function Income() {
             </div>
           </div>
           <CurrencyInput
+            error={incomeError}
             label="Estimated annual income"
             name="estimatedAnnualIncome"
+            onBlur={() => setIncomeBlurred(true)}
+            onFocus={() => setIncomeBlurred(false)}
             onValueChange={(value) => {
               setIncome(value);
               setStoredValue(storageKeys.annualIncome, value);

@@ -36,6 +36,12 @@
   grid-template-columns: repeat(4, 1fr);
 }
 
+.paymentType {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-extra-small);
+}
+
 .paymentTypes button {
   background: var(--background-white);
   border: 1px solid var(--color-blue);
@@ -44,6 +50,15 @@
   font-size: var(--font-size-small);
   line-height: 1.42;
   padding: 8px;
+  width: 100%;
+}
+
+.paymentType p {
+  color: var(--text-body-subtle);
+  font-size: var(--font-size-small);
+  line-height: 1.42;
+  margin: 0;
+  text-align: center;
 }
 
 .paymentTypes .activePaymentType {
@@ -259,12 +274,6 @@
 .rateValue {
   align-items: flex-end;
   text-align: right;
-}
-
-.originalApr {
-  color: var(--text-body-subtle);
-  font-weight: var(--font-weight-normal);
-  text-decoration: line-through;
 }
 
 .detailsButton {

@@ -104,6 +104,12 @@
   gap: var(--space-small);
 }
 
+.previousAddressHeader {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+}
+
 .previousAddress h2 {
   color: var(--text-heading);
   font-size: var(--font-size-base);

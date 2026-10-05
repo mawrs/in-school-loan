@@ -11,6 +11,13 @@ import { TopNav } from "@/components/top-nav";
 import { readApplicationDraft, updateApplicationDraft, useStoredUser } from "@/lib/storage";
 import styles from "./page.module.css";
 
+function formatSsn(value: string) {
+  const digits = value.replaceAll(/\D/g, "").slice(0, 9);
+  if (digits.length <= 3) return digits;
+  if (digits.length <= 5) return `${digits.slice(0, 3)} - ${digits.slice(3)}`;
+  return `${digits.slice(0, 3)} - ${digits.slice(3, 5)} - ${digits.slice(5)}`;
+}
+
 export default function Identity() {
   const router = useRouter();
   const { fullName } = useStoredUser();
@@ -20,7 +27,7 @@ export default function Identity() {
 
   useEffect(() => {
     const draft = readApplicationDraft();
-    setSsn(draft.ssn);
+    setSsn(formatSsn(draft.ssn));
     setDateOfBirth(draft.dateOfBirth);
     if (draft.citizenship) setCitizenship(draft.citizenship);
   }, []);
@@ -48,13 +55,15 @@ export default function Identity() {
             <div className={styles.identityFields}>
               <FloatingInput
                 autoComplete="off"
+                inputMode="numeric"
                 label="Social Security Number"
                 name="ssn"
                 onChange={(event) => {
-                  setSsn(event.target.value);
-                  updateApplicationDraft({ ssn: event.target.value });
+                  const nextSsn = formatSsn(event.target.value);
+                  setSsn(nextSsn);
+                  updateApplicationDraft({ ssn: nextSsn.replaceAll(/\D/g, "") });
                 }}
-                type="password"
+                type="text"
                 value={ssn}
               />
               <FloatingInput

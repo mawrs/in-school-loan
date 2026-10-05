@@ -73,7 +73,13 @@ export default function AddressDetails() {
             </div>
           ) : (
             <section className={styles.previousAddress}>
-              <h2>Previous Residential Address</h2>
+              <div className={styles.previousAddressHeader}>
+                <h2>Previous Residential Address</h2>
+                <Link onClick={() => {
+                  setHasPreviousAddress(false);
+                  setPreviousAddress(emptyAddress);
+                }}>Delete address</Link>
+              </div>
               <div className={styles.fieldRow}>
                 <FloatingInput
                   id="previous-street-address"

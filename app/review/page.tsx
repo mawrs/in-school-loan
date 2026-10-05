@@ -195,7 +195,7 @@ export default function Review() {
         { label: "Date of Birth", value: provided(draft.dateOfBirth) },
         { label: "Phone Number", value: provided(draft.phone) },
         { label: "Permanent Address", value: provided(address) },
-        { label: "Social Security Number (SSN)", value: draft.ssn ? "•••-••-••••" : "Not provided" },
+        { label: "Social Security Number (SSN)", value: draft.ssn ? "••• - •• - ••••" : "Not provided" },
         { label: "Citizenship Status", value: draft.citizenship === "resident" ? "Permanent Resident" : draft.citizenship === "citizen" ? "U.S Citizen" : "Not provided" },
       ],
     },
